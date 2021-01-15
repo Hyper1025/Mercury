@@ -2894,7 +2894,7 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 			case 'aww':
-				const aww = await axios.get('https://meme-api.herokuapp.com/gimme/CosplayLewd')
+				const aww = await axios.get('https://meme-api.herokuapp.com/gimme/aww')
 				client.sendFileFromUrl(from, aww.data.url, '', aww.data.title, id)
 				break
 
