@@ -1,0 +1,8 @@
+{
+"ownerNumber": "55xxxxxxxxxx",
+"prefix": "#",
+"botName": "Bot",
+"memberLimit": 100,
+"memberMinimum": 5,
+"groupLimit": 8
+}
