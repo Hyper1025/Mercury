@@ -40,7 +40,7 @@ CPU TensorFlow.js for Node:
  ```
  
 ### Configurando
-Na raiz desse projeto procure pela pasta **settings**, e então lá você deve criar dois arquivos, o **api.json** e o **settings.json**
+Na raiz desse projeto procure pela pasta **[settings](https://github.com/Hyper1025/Mercury/tree/main/settings)**, e então lá você deve criar dois arquivos, o **api.json** e o **settings.json**
 
 Copie isso para o arquivo que você nomeou como **api.json** e altere as ‘strings’
 ```json
@@ -74,7 +74,7 @@ Copie isso para o arquivo que você nomeou como **settings.json** e altere as �
 ### Iniciar
 Localize o diretório do projeto com:
 ```bash
-> cd <insire o diretório do projeto aqui>
+> cd Diretório do projeto
 ```
 Exemplo:
 ```bash
