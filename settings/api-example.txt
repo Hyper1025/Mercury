@@ -1,0 +1,7 @@
+{
+    "apiRemoveBg": "APIKeyHere",
+    "apiImgBB":"APIKeyHere",
+    "apiNasa":"APIKeyHere",
+    "apiAlphaCoders":"APIKeyHere",
+    "apiFlash":"APIKeyHere"
+}
