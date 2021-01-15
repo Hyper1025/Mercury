@@ -1,7 +1,7 @@
 const { create, Client } = require('@open-wa/wa-automate') // As consts aqui declaram as funções de outros arquivos
 const welcome = require('./lib/welcome') // Ou de modulos que usei
 const msgHandler = require('./msgHandler')
-const hyper = require('./hyper')
+//const hyper = require('./hyper')
 const options = require('./options')
 const color = require('./lib/color')
 const fs = require('fs-extra')
@@ -44,7 +44,7 @@ const start = (client = new Client()) => {
 
     // Configuração do welcome
     client.onGlobalParicipantsChanged((async (heuh) => {
-        await welcome(client, heuh)
+        //await welcome(client, heuh)
     }))
 
 
