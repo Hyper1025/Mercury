@@ -18,16 +18,18 @@ Caso queira ver o projeto original, é só clicar [aqui](https://github.com/Kill
 ### Clonando o repositório e instalando dependências
 Você precisa ter esse repositório, é simples, rode os comandos abaixo.
 
+Você precisa ter o pyton instalado na sua máquina, faça o [download aqui](https://www.python.org/downloads/) 
+
 ```bash
 > git clone https://github.com/Hyper1025/Mercury.git
 > cd Mercury
+> npm install --global --production windows-build-tools
 > npm i
 > npm install gify-cli gify
 > npm install --save @ffmpeg-installer/ffmpeg
 ```
-## Opcional:
-Caso já queira deixar o bot preparado para o uso de IA
-Se você tiver GPU`s que comportem CUDA, use o *GPU TensorFlow.js for Node:*
+### TensorFlow:
+Se você tiver GPU’s que comportem CUDA, use o *GPU TensorFlow.js for Node:*
 
 CPU TensorFlow.js for Node:
 ```bash
