@@ -72,6 +72,9 @@ const fetch = require('node-fetch');
 const nsfw_ = JSON.parse(fs.readFileSync('./lib/NSFW.json'))
 const welkom = JSON.parse(fs.readFileSync('./lib/welcome.json'))
 const exsv = JSON.parse(fs.readFileSync('./lib/exclusive.json'))
+const faki = JSON.parse(fs.readFileSync('./lib/fake.json'))
+const bklist = JSON.parse(fs.readFileSync('./lib/blacklist.json'))
+const atbk = JSON.parse(fs.readFileSync('./lib/anti.json'))
 const errorurl = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
 const errorurl2 = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
 
@@ -626,6 +629,85 @@ module.exports = msgHandler = async (client, message) => {
 			case 'id':
 				if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
 				client.reply(from, `A ID desse grupo é ${groupId}`, id)
+				break
+
+			case 'fake':
+				if (isGroupMsg && isGroupAdmins) {
+					if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
+					if (args[0] == 'on') {
+						faki.push(chatId)
+						fs.writeFileSync('./lib/fake.json', JSON.stringify(faki))
+						client.reply(from, 'Anti-Fakes habilitado.', id)
+					} else if (args[0] == 'off') {
+						let yath = faki.indexOf(chatId)
+						faki.splice(yath, 1)
+						fs.writeFileSync('./lib/fake.json', JSON.stringify(faki))
+						client.reply(from, 'Anti-fakes desabilitado.', id)
+					}
+				} else if (isGroupMsg && isOwner) {
+					if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
+					if (args[0] == 'on') {
+						faki.push(chatId)
+						fs.writeFileSync('./lib/fake.json', JSON.stringify(faki))
+						client.reply(from, 'Anti-Fakes habilitado.', id)
+					} else if (args[0] == 'off') {
+						let yath = faki.indexOf(chatId)
+						faki.splice(yath, 1)
+						fs.writeFileSync('./lib/fake.json', JSON.stringify(faki))
+						client.reply(from, 'Anti-fakes desabilitado.', id)
+					}
+				} else {
+					client.reply(from, mess.error.Ga, id)
+				}
+				break
+
+			case 'blacklist':
+				if (isGroupMsg && isGroupAdmins) {
+					if (args.length !== 1) return client.reply(from, 'Defina entre on e off!', id)
+					if (args[0] == 'on') {
+						bklist.push(chatId)
+						fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
+						client.reply(from, `Anti números acionado.\nUse ${prefix}bklist (Número) para adicionar números.`, id)
+					} else if (args[0] == 'off') {
+						let exclu = bklist.indexOf(chatId)
+						bklist.splice(exclu, 1)
+						fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
+						client.reply(from, 'Anti números offline.', id)
+					}
+				} else if (isGroupMsg && isOwner) {
+					if (args.length !== 1) return client.reply(from, 'Defina entre on e off!', id)
+					if (args[0] == 'on') {
+						bklist.push(chatId)
+						fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
+						client.reply(from, `Anti números acionado.\nUse ${prefix}bklist (Número) para adicionar números.`, id)
+					} else if (args[0] == 'off') {
+						let exclu = bklist.indexOf(chatId)
+						bklist.splice(exclu, 1)
+						fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
+						client.reply(from, 'Anti números offline.', id)
+					}
+				} else {
+					client.reply(from, mess.error.Ga, id)
+				}
+				break
+
+
+			case 'bklist':
+				if (isGroupMsg && isGroupAdmins) {
+					if (args.length == 0) return client.reply(from, 'Defina o número.', id)
+					const bkls = body.slice(8) + '@c.us'
+					atbk.push(bkls)
+					fs.writeFileSync('./lib/anti.json', JSON.stringify(atbk))
+					await client.reply(from, 'Número adicionado a black-list', id)
+				} else if (isGroupMsg && isOwner) {
+					if (args.length == 0) return client.reply(from, 'Defina o número.', id)
+					const bkls = body.slice(8) + '@c.us'
+					atbk.push(bkls)
+					fs.writeFileSync('./lib/anti.json', JSON.stringify(atbk))
+					await client.reply(from, 'Número adicionado a black-list', id)
+				} else {
+					client.reply(from, mess.error.Ga, id)
+				}
 				break
 
 
