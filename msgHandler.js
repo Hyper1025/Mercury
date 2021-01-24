@@ -375,8 +375,10 @@ module.exports = msgHandler = async (client, message) => {
 					})
 				break
 
+			case 'fignobg':
 			case 'stickernobg':
-				if (isMedia) {
+				if (isMedia && type == 'image') {
+
 					try {
 						var mediaData = await decryptMedia(message, uaOverride)
 						var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
@@ -388,7 +390,7 @@ module.exports = msgHandler = async (client, message) => {
 							size: 'auto',
 							type: 'auto',
 							outFile
-						}) // bota sua propria api ai, cuidado no limite mensal
+						})
 						await fs.writeFile(outFile, result.base64img)
 						await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
 						await client.reply(from, 'Certifique-se de evitar usar isso quando não precisar,', id)
@@ -396,6 +398,27 @@ module.exports = msgHandler = async (client, message) => {
 						console.log(err)
 						await client.reply(from, 'Ups! Parece que a API chegou no seu limite de usos diários!\nTente novamente amanha', id)
 					}
+				} else if (quotedMsg && quotedMsg.type == 'image') {
+					try {
+						var mediaData = await decryptMedia(quotedMsg, uaOverride)
+						var imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+						var base64img = imageBase64
+						var outFile = './lib/media/img/noBg.png'
+						var result = await removeBackgroundFromImageBase64({
+							base64img,
+							apiKey: apiRemoveBg,
+							size: 'auto',
+							type: 'auto',
+							outFile
+						})
+						await fs.writeFile(outFile, result.base64img)
+						await client.sendImageAsSticker(from, `data:${quotedMsg.mimetype};base64,${result.base64img}`)
+						await client.reply(from, 'Certifique-se de evitar usar isso quando não precisar,', id)
+					} catch (err) {
+						console.log(err)
+						await client.reply(from, 'Ups! Parece que a API chegou no seu limite de usos diários!\nTente novamente amanha', id)
+					}
+
 				} else {
 					await client.reply(from, `Ups! preciso que me envie a imagem com a legenda ${prefix}stickernobg `, id)
 				}
@@ -1847,7 +1870,6 @@ module.exports = msgHandler = async (client, message) => {
 				}
 				break
 
-			case 'bc':
 			case 'broad':
 				if (!isOwner) return client.reply(from, 'Somente o meu criador tem acesso a este comando.', id)
 				let msg = body.slice(6)
