@@ -4,5 +4,6 @@
 "botName": "Bot",
 "memberLimit": 100,
 "memberMinimum": 5,
-"groupLimit": 8
+"groupLimit": 8,
+"alwaysAllowDDD": "55XX"
 }

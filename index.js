@@ -1,5 +1,5 @@
-const { create, Client } = require('@open-wa/wa-automate') // As consts aqui declaram as funções de outros arquivos
-const welcome = require('./lib/welcome') // Ou de modulos que usei
+const { create, Client } = require('@open-wa/wa-automate') // As const`s aqui declaram as funções de outros arquivos
+const welcome = require('./lib/welcome') // Ou de módulos que usei
 const msgHandler = require('./msgHandler')
 //const hyper = require('./hyper')
 const options = require('./options')
@@ -14,7 +14,8 @@ const {
     groupLimit,
     memberLimit,
     memberMinimum,
-    prefix
+    prefix,
+    alwaysAllowDDD
 } = JSON.parse(fs.readFileSync('./settings/settings.json'))
 
 
@@ -28,28 +29,32 @@ const start = (client = new Client()) => {
         if (state === 'CONFLICT' || state === 'UNLAUNCHED') client.forceRefocus()
     })
 
-
     // Le as mensagens e limpa cache
     client.onMessage((async (message) => {
         client.getAmountOfLoadedMessages()
             .then((msg) => {
-                if (msg >= 500) {
+                if (msg >= 100) {
                     client.cutMsgCache()
                 }
             })
         msgHandler(client, message)
-        hyper(client, message)
+        //hyper(client, message)
 
     }))
 
     // Configuração do welcome
-    client.onGlobalParicipantsChanged((async (heuh) => {
-        //await welcome(client, heuh)
+    client.onGlobalParicipantsChanged((async (event) => {
+        await welcome(client, event)
     }))
-
 
     client.onAddedToGroup(async (newGroup) => {
         const groups = await client.getAllGroups()
+
+        if (newGroup.groupMetadata.owner.startsWith(alwaysAllowDDD)) {
+            console.log(color('[EVENTO]'), color('Adicionado DDD permitido', 'green'), 'em', color(newGroup.name), 'com', color(`${newGroup.groupMetadata.participants.length} usuários`, 'magenta'))
+            return await client.sendText(newGroup.id, `Olá, obrigado por me adicionar 😀\nVeja todos meus comandos usando *${prefix}menu*`)
+        }
+
         if (groups.length >= groupLimit) {
             // Quando o limite do grupo de bots for atingido
             // altere o limite no arquivo settings.json            
@@ -78,7 +83,6 @@ const start = (client = new Client()) => {
             console.log(color('[EVENTO]'), color('Adicionado', 'green'), 'em', color(newGroup.name), 'com', color(`${newGroup.groupMetadata.participants.length} usuários`, 'magenta'))
         }
     });
-
 
     // analise de mensagens
     client.onAnyMessage((lise) => {

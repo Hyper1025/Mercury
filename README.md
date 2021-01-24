@@ -69,7 +69,8 @@ Copie isso para o arquivo que vocÃª nomeou como **settings.json** e altere as â€
 "botName": "Bot",
 "memberLimit": 100,
 "memberMinimum": 5,
-"groupLimit": 8
+"groupLimit": 8,
+"alwaysAllowDDD": "55XX"
 }
 ```
 
