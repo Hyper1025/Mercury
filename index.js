@@ -1,7 +1,6 @@
 const { create, Client } = require('@open-wa/wa-automate') // As const`s aqui declaram as funções de outros arquivos
 const welcome = require('./lib/welcome') // Ou de módulos que usei
 const msgHandler = require('./msgHandler')
-//const hyper = require('./hyper')
 const options = require('./options')
 const color = require('./lib/color')
 const fs = require('fs-extra')
@@ -37,9 +36,10 @@ const start = (client = new Client()) => {
                     client.cutMsgCache()
                 }
             })
-        msgHandler(client, message)
-        //hyper(client, message)
 
+        require('./msgHandler.js')(client, message)
+        // Abaixo está uma versão assistida, mas afetará o desempenho
+        //msgHandler(client, message)
     }))
 
     // Configuração do welcome
