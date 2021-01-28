@@ -106,7 +106,7 @@ Abra o arquivo **msgHandler.js** e ache um lugarzinho em branco bonito, darei um
 
 ```bash
 case  'Nome do comando sem espaços':
-await kill.reply(from, 'Sua mensagem', id)
+await client.reply(from, 'Sua mensagem', id)
 break
 ```
 Caso  queira ver tudo que o WA-Automate consegue fazer, entre [aqui](https://docs.openwa.dev/classes/client.html)
