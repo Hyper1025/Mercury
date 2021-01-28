@@ -1,8 +1,7 @@
 // Caso queira ver o projeto original: https://github.com/KillovSky/iris
 
-const {
-	decryptMedia
-} = require('@open-wa/wa-decrypt')
+/********** MODULES **********/
+const { decryptMedia } = require('@open-wa/wa-decrypt')
 const fs = require('fs-extra')
 const axios = require('axios')
 const sharp = require('sharp')
@@ -13,125 +12,57 @@ const isPorn = require('is-porn')
 const imgSearch = require('node-reverse-image-search')
 const imgbbUploader = require('imgbb-uploader')
 const moment = require('moment-timezone')
-moment.tz.setDefault('America/Sao_Paulo').locale('pt_BR')
 const get = require('got')
 const request = require('request')
 const color = require('./lib/color')
-const {
-	spawn,
-	exec,
-	execFile
-} = require('child_process')
+const ytdl = require('ytdl-core');
+const ytsr = require('ytsr')
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpeg = require('fluent-ffmpeg');
+const { spawn, exec, execFile } = require('child_process')
 const nhentai = require('nhentai-js')
-const {
-	API
-} = require('nhentai-api')
-const {
-	randomNimek,
-	sleep,
-	wall,
-	tulis,
-	ss
-} = require('./lib/functions')
-const {
-	owner,
-	donate,
-	down,
-	help,
-	admins,
-	adult,
-	readme,
-	lang
-} = require('./lib/help')
-const {
-	stdout
-} = require('process')
+const { API } = require('nhentai-api')
+const { randomNimek, sleep, wall, tulis, ss } = require('./lib/functions')
+const { owner, donate, down, help, admins, adult, readme, lang } = require('./lib/help')
+const { stdout } = require('process')
 const bent = require('bent')
-const {
-	doing
-} = require('./lib/translate.js')
-const {
-	translate,
-	msgFilter,
-	meme,
-	urlShortener,
-	killo
-} = require('./lib')
-const {
-	uploadImages
-} = require('./lib/fether')
+const { doing } = require('./lib/translate.js')
+const { translate, msgFilter, meme, urlShortener, killo } = require('./lib')
+const { uploadImages } = require('./lib/fether')
 const feature = require('./lib/poll')
-const {
-	sobre
-} = require('./lib/sobre')
+const { sobre } = require('./lib/sobre')
 const BrainlySearch = require('./lib/brainly')
-const {
-	removeBackgroundFromImageBase64
-} = require('remove.bg')
+const { removeBackgroundFromImageBase64 } = require('remove.bg')
 const fetch = require('node-fetch');
-const nsfw_ = JSON.parse(fs.readFileSync('./lib/NSFW.json'))
-const welkom = JSON.parse(fs.readFileSync('./lib/welcome.json'))
-const exsv = JSON.parse(fs.readFileSync('./lib/exclusive.json'))
-const faki = JSON.parse(fs.readFileSync('./lib/fake.json'))
-const bklist = JSON.parse(fs.readFileSync('./lib/blacklist.json'))
-const atbk = JSON.parse(fs.readFileSync('./lib/anti.json'))
+moment.tz.setDefault('America/Sao_Paulo').locale('pt_BR')
+ffmpeg.setFfmpegPath(ffmpegPath);
+/********** END OF MODULES **********/
+
+/********** DATABASES **********/
+const nsfw_ = JSON.parse(fs.readFileSync('./database/group/NSFW.json'))
+const welkom = JSON.parse(fs.readFileSync('./database/group/welcome.json'))
+const exsv = JSON.parse(fs.readFileSync('./database/bot/exclusive.json'))
+const faki = JSON.parse(fs.readFileSync('./database/group/fake.json'))
+const bklist = JSON.parse(fs.readFileSync('./database/group/blacklist.json'))
+const atbk = JSON.parse(fs.readFileSync('./database/group/anti.json'))
+/********** END OF DATABASES **********/
+
 const errorurl = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
 const errorurl2 = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207/5B7E46EE484181A676C02DFCAD48ECB1C74BC423/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'
 
-// YouTube downloader e conversor
-const ytdl = require('ytdl-core');
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(ffmpegPath);
 
-// Arquivos de configuração
-const {
-	apiRemoveBg,
-	apiImgBB,
-	apiNasa
-} = JSON.parse(fs.readFileSync('./settings/api.json'))
-
-const {
-	ownerNumber,
-	groupLimit,
-	prefix,
-	memberLimit,
-	memberMinimum,
-	botName
-} = JSON.parse(fs.readFileSync('./settings/settings.json'))
+/********** SETTINGS FILES **********/
+const { apiRemoveBg, apiImgBB, apiNasa } = JSON.parse(fs.readFileSync('./settings/api.json'))
+const { ownerNumber, groupLimit, prefix, memberLimit, memberMinimum, botName } = JSON.parse(fs.readFileSync('./settings/settings.json'))
+/********** END OF SETTINGS FILES **********/
 
 
 module.exports = msgHandler = async (client, message) => {
 	try {
-		const {
-			type,
-			id,
-			from,
-			t,
-			sender,
-			author,
-			isGroupMsg,
-			chat,
-			chatId,
-			caption,
-			isMedia,
-			mimetype,
-			quotedMsg,
-			quotedMsgObj,
-			mentionedJidList
-		} = message
-		let {
-			body
-		} = message
-		const {
-			name,
-			formattedTitle
-		} = chat
-		let {
-			pushname,
-			verifiedName,
-			formattedName
-		} = sender
+		const { type, id, from, t, sender, author, isGroupMsg, chat, chatId, caption, isMedia, mimetype, quotedMsg, quotedMsgObj, mentionedJidList } = message
+		let { body } = message
+		const { name, formattedTitle } = chat
+		let { pushname, verifiedName, formattedName } = sender
 		pushname = pushname || verifiedName || formattedName
 		const double = Math.floor(Math.random() * 2) + 1
 		const four = Math.floor(Math.random() * 4) + 1
@@ -141,9 +72,7 @@ module.exports = msgHandler = async (client, message) => {
 		const seven = Math.floor(Math.random() * 7) + 1
 		const lvpc = Math.floor(Math.random() * 101) + 1
 		const time = moment(t * 1000).format('DD/MM HH:mm:ss')
-		const processTime = (timestamp, now) => {
-			return moment.duration(now - moment(timestamp * 1000)).asSeconds()
-		}
+		const processTime = (timestamp, now) => { return moment.duration(now - moment(timestamp * 1000)).asSeconds() }
 		const botNumber = await client.getHostNumber()
 		const blockNumber = await client.getBlockedIds()
 		const groupId = isGroupMsg ? chat.groupMetadata.id : ''
@@ -234,13 +163,11 @@ module.exports = msgHandler = async (client, message) => {
 			return console.log(color('FLOOD AS', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'de', color(pushname))
 		}
 
-
 		// ANTI FLOOD GRUPOS
 		if (isCmd && msgFilter.isFiltered(from) && isGroupMsg) {
 			await client.reply(from, 'EI! Espere 10 segundos antes de usar outros comandos!', id)
 			return console.log(color('FLOOD AS', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'de', color(pushname), 'em', color(name || formattedTitle))
 		}
-
 
 		// MENSAGENS
 		if (!isCmd && !isGroupMsg) {
@@ -268,6 +195,10 @@ module.exports = msgHandler = async (client, message) => {
 
 		switch (command) {
 
+			case 'ping':
+				client.sendText(from, `🏓 Pong!\n_Minha velocidade é de ${processTime(t, moment())} segundos._`)
+				break
+
 			case 'fig':
 			case 'sticker':
 			case 'stiker':
@@ -279,9 +210,9 @@ module.exports = msgHandler = async (client, message) => {
 							fit: sharp.fit.contain,
 							background: { r: 0, g: 0, b: 0, alpha: 0 }
 						})
-						.toFile('./lib/media/sticker.png')
+						.toFile('./temp/stickers/sticker.png')
 
-					var imgReadToBase = await fs.readFileSync('./lib/media/sticker.png', {
+					var imgReadToBase = await fs.readFileSync('./temp/stickers/sticker.png', {
 						encoding: "base64"
 					})
 
@@ -299,9 +230,9 @@ module.exports = msgHandler = async (client, message) => {
 							fit: sharp.fit.contain,
 							background: { r: 0, g: 0, b: 0, alpha: 0 }
 						})
-						.toFile('./lib/media/sticker.png')
+						.toFile('./temp/stickers/sticker.png')
 
-					var imgReadToBase = await fs.readFileSync('./lib/media/sticker.png', {
+					var imgReadToBase = await fs.readFileSync('./temp/stickers/sticker.png', {
 						encoding: "base64"
 					})
 
@@ -327,32 +258,12 @@ module.exports = msgHandler = async (client, message) => {
 			case 'figc':
 			case 'stickercover':
 			case 'stikercover':
-				if (isMedia && type === 'image') {
-					const mediaData = await decryptMedia(message, uaOverride)
-					sharp(mediaData)
-						.resize(512, 512, {
-							fit: sharp.fit.cover
-						})
-						.flatten(true)
-						.toBuffer()
-						.then(async (resizedImageBuffer) => {
-							let resizedImageData = resizedImageBuffer.toString('base64');
-							let resizedBase64 = `data:${mimetype};base64,${resizedImageData}`;
-							await client.sendImageAsSticker(from, resizedBase64)
-						})
-				} else if (quotedMsg && quotedMsg.type == 'image') {
-					const mediaData = await decryptMedia(quotedMsg, uaOverride)
-					sharp(mediaData)
-						.resize(512, 512, {
-							fit: sharp.fit.cover
-						})
-						.flatten(true)
-						.toBuffer()
-						.then(async (resizedImageBuffer) => {
-							let resizedImageData = resizedImageBuffer.toString('base64');
-							let resizedBase64 = `data:${quotedMsg.mimetype};base64,${resizedImageData}`;
-							await client.sendImageAsSticker(from, resizedBase64)
-						})
+				if ((isMedia || isQuotedImage) && args.length === 0) {
+					const encryptMedia = isQuotedImage ? quotedMsg : message
+					const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+					const mediaData = await decryptMedia(encryptMedia, uaOverride)
+					const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+					client.sendImageAsSticker(from, imageBase64)
 				} else if (args.length == 1) {
 					const url = args[1]
 					if (url.match(isUrl)) {
@@ -386,7 +297,7 @@ module.exports = msgHandler = async (client, message) => {
 						var mediaData = await decryptMedia(message, uaOverride)
 						var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
 						var base64img = imageBase64
-						var outFile = './lib/media/img/noBg.png'
+						var outFile = './temp/img/noBg.png'
 						var result = await removeBackgroundFromImageBase64({
 							base64img,
 							apiKey: apiRemoveBg,
@@ -406,7 +317,7 @@ module.exports = msgHandler = async (client, message) => {
 						var mediaData = await decryptMedia(quotedMsg, uaOverride)
 						var imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
 						var base64img = imageBase64
-						var outFile = './lib/media/img/noBg.png'
+						var outFile = './temp/img/noBg.png'
 						var result = await removeBackgroundFromImageBase64({
 							base64img,
 							apiKey: apiRemoveBg,
@@ -435,10 +346,10 @@ module.exports = msgHandler = async (client, message) => {
 					if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 15) {
 						var mediaData = await decryptMedia(message, uaOverride)
 						client.reply(from, mess.wait, id)
-						var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
+						var filename = `./temp/stickers/stickergif.${mimetype.split('/')[1]}`
 						await fs.writeFileSync(filename, mediaData)
-						await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
-							var gif = await fs.readFileSync('./lib/media/stickergf.gif', {
+						await exec(`gify ${filename} ./temp/stickers/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
+							var gif = await fs.readFileSync('./temp/stickers/stickergf.gif', {
 								encoding: "base64"
 							})
 							await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
@@ -453,10 +364,10 @@ module.exports = msgHandler = async (client, message) => {
 					if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
 						var mediaData = await decryptMedia(quotedMsg, uaOverride)
 						client.reply(from, mess.wait, id)
-						var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
+						var filename = `./temp/stickers/stickergif.${quotedMsg.mimetype.split('/')[1]}`
 						await fs.writeFileSync(filename, mediaData)
-						await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
-							var gif = await fs.readFileSync('./lib/media/stickergf.gif', {
+						await exec(`gify ${filename} ./temp/stickers/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
+							var gif = await fs.readFileSync('./temp/stickers/stickergf.gif', {
 								encoding: "base64"
 							})
 							await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
@@ -483,7 +394,7 @@ module.exports = msgHandler = async (client, message) => {
 						client.reply(from, `*${ttile}*\n\n*Titulo >* ${ttscig}\n\n${results[1].url}`, id)
 						console.log(results)
 					}
-					var seaimg = './lib/media/img/imagesearch.jpg'
+					var seaimg = './temp/img/imagesearch.jpg'
 					await fs.writeFile(seaimg, mediaData)
 					const upimg = await imgbbUploader(apiImgBB, seaimg) // Bote uma api do imgbb pras suas fotos n irem pra minha conta
 					console.log(upimg.url)
@@ -498,7 +409,7 @@ module.exports = msgHandler = async (client, message) => {
 			case 'upimg':
 				if (isMedia && type === 'image') {
 					const mediaData = await decryptMedia(message, uaOverride)
-					var uplimg = './lib/media/img/imageupl.jpg'
+					var uplimg = './temp/img/imageupl.jpg'
 					await fs.writeFile(uplimg, mediaData)
 					const sdimg = await imgbbUploader(apiImgBB, uplimg) // Bote uma api do imgbb pras suas fotos n irem pra minha conta
 					console.log(sdimg.url_viewer)
@@ -636,24 +547,24 @@ module.exports = msgHandler = async (client, message) => {
 					if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
 					if (args[0] == 'on') {
 						faki.push(chatId)
-						fs.writeFileSync('./lib/fake.json', JSON.stringify(faki))
+						fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
 						client.reply(from, 'Anti-Fakes habilitado.', id)
 					} else if (args[0] == 'off') {
 						let yath = faki.indexOf(chatId)
 						faki.splice(yath, 1)
-						fs.writeFileSync('./lib/fake.json', JSON.stringify(faki))
+						fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
 						client.reply(from, 'Anti-fakes desabilitado.', id)
 					}
 				} else if (isGroupMsg && isOwner) {
 					if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
 					if (args[0] == 'on') {
 						faki.push(chatId)
-						fs.writeFileSync('./lib/fake.json', JSON.stringify(faki))
+						fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
 						client.reply(from, 'Anti-Fakes habilitado.', id)
 					} else if (args[0] == 'off') {
 						let yath = faki.indexOf(chatId)
 						faki.splice(yath, 1)
-						fs.writeFileSync('./lib/fake.json', JSON.stringify(faki))
+						fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
 						client.reply(from, 'Anti-fakes desabilitado.', id)
 					}
 				} else {
@@ -666,24 +577,24 @@ module.exports = msgHandler = async (client, message) => {
 					if (args.length !== 1) return client.reply(from, 'Defina entre on e off!', id)
 					if (args[0] == 'on') {
 						bklist.push(chatId)
-						fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
+						fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
 						client.reply(from, `Anti números acionado.\nUse ${prefix}bklist (Número) para adicionar números.`, id)
 					} else if (args[0] == 'off') {
 						let exclu = bklist.indexOf(chatId)
 						bklist.splice(exclu, 1)
-						fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
+						fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
 						client.reply(from, 'Anti números offline.', id)
 					}
 				} else if (isGroupMsg && isOwner) {
 					if (args.length !== 1) return client.reply(from, 'Defina entre on e off!', id)
 					if (args[0] == 'on') {
 						bklist.push(chatId)
-						fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
+						fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
 						client.reply(from, `Anti números acionado.\nUse ${prefix}bklist (Número) para adicionar números.`, id)
 					} else if (args[0] == 'off') {
 						let exclu = bklist.indexOf(chatId)
 						bklist.splice(exclu, 1)
-						fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
+						fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
 						client.reply(from, 'Anti números offline.', id)
 					}
 				} else {
@@ -697,13 +608,13 @@ module.exports = msgHandler = async (client, message) => {
 					if (args.length == 0) return client.reply(from, 'Defina o número.', id)
 					const bkls = body.slice(8) + '@c.us'
 					atbk.push(bkls)
-					fs.writeFileSync('./lib/anti.json', JSON.stringify(atbk))
+					fs.writeFileSync('./database/group/anti.json', JSON.stringify(atbk))
 					await client.reply(from, 'Número adicionado a black-list', id)
 				} else if (isGroupMsg && isOwner) {
 					if (args.length == 0) return client.reply(from, 'Defina o número.', id)
 					const bkls = body.slice(8) + '@c.us'
 					atbk.push(bkls)
-					fs.writeFileSync('./lib/anti.json', JSON.stringify(atbk))
+					fs.writeFileSync('./database/group/anti.json', JSON.stringify(atbk))
 					await client.reply(from, 'Número adicionado a black-list', id)
 				} else {
 					client.reply(from, mess.error.Ga, id)
@@ -938,45 +849,63 @@ module.exports = msgHandler = async (client, message) => {
 				break;
 
 
-			case 'mp3': // eu censurei o acesso pois as apis estão offlines, e fazer isso evita que usem o comando e te de problemas
+			case 'mp3':
 				if (args.length == 0) return client.reply(from, `Para baixar músicas do youtube\nUso: ${prefix}ytmp3 [link_yt]`, id)
 				if (!ytdl.validateURL(args[0])) return client.reply(from, `O url não é válido`, id) //  Verifica se é um url valido do youtube
 				var ytmp3ID = args[0].replace('https://m.youtu.be/', '').replace('https://youtu.be/', '').replace('https://www.youtube.com/', '').replace('watch?v=', '') // Remove o link e pega só o ID
+
+				const ytmp3info = await ytdl.getInfo(`https://www.youtube.com/watch?v=${ytmp3ID}`, {
+					quality: 'highestaudio'
+				});
+
 				let stream = ytdl(ytmp3ID, {
 					quality: 'highestaudio'
 				});
 
-				const ytmp3video = await ytdl.getInfo(`https://www.youtube.com/watch?v=${ytmp3ID}`);
+				let songinfo = {
+					title: ytmp3info.videoDetails.title,
+					url: ytmp3info.videoDetails.video_url,
+					thumbnail: ytmp3info.videoDetails.thumbnails[5].url,
+					lengthSeconds: ytmp3info.videoDetails.lengthSeconds,
+					authorName: ytmp3info.videoDetails.author.name,
+					videoId: ytmp3info.videoDetails.videoId,
+					isPrivate: ytmp3info.videoDetails.isPrivate,
+				}
 
-				if (ytmp3video.videoDetails.lengthSeconds > 900) {
+				//console.log(songinfo);
+				let testSize = (((songinfo.lengthSeconds * 128000) / 8) / 1024) / 1024
+				console.log(`Estimativa de tamanho do vídeo: ${testSize} MB`);
+
+				if (testSize >= 15) {
+					return client.reply(from, `O arquivo é muito grande ✋😥`, id)
+				}
+
+				if (songinfo.lengthSeconds > 900) {
 					return client.reply(from, `O vídeo é longo demais ✋😥`, id)
 				}
 
-				const mp3size = await axios.get(`http://st4rz.herokuapp.com/api/ytv?url=https://youtu.be/${ytmp3ID}`)
-				const mp3fsize = mp3size.data.filesize.replace(' MB', '').replace('Download  ', 'Impossivel calcular')
-				console.log(mp3fsize)
-				const mp3impo = mp3size.data.filesize.replace('Download  ', 'um peso muito superior que não posso calcular')
-				if (mp3fsize >= 16.0 || mp3size.data.filesize.endsWith('Download  ') || mp3size.data.filesize.endsWith('GB')) {
-					return client.reply(from, `Desculpe, para evitar banimentos do WhatsApp, o limite de envio de videos é de 16MB, e esse possui ${mp3impo.replace('    ', ' ')}.`, id)
-				}
-
-				await ytdl.getInfo(`https://www.youtube.com/watch?v=${ytmp3ID}`).then((info) => {
-					client.reply(from, `Preparando *${info.videoDetails.title}*\nAguarde...`, id)
-				})
+				client.reply(from, `Preparando *${songinfo.title}*\nAguarde...`, id)
 
 				ffmpeg(stream)
 					.audioBitrate(128)
-					.save(`./media/yt/${ytmp3ID}.mp3`)
+					.save(`./temp/yt/${songinfo.videoId}.mp3`)
 					.on('end', () => {
-						client.sendFile(from, `./media/yt/${ytmp3ID}.mp3`, `${ytmp3ID}.mp3`, null, id).then(f => {
-							try {
-								fs.unlinkSync(`./media/yt/${ytmp3ID}.mp3`);
-								console.log(`successfully deleted ${ytmp3ID}.mp3`);
-							} catch (err) {
-								// handle the error
-								console.log(err);
-							}
-						})
+						var stats = fs.statSync(`./temp/yt/${songinfo.videoId}.mp3`)
+						let realSize = stats.size / (1024 * 1024);
+						console.log(`Tamanho real: ${realSize} MB`);
+						if (realSize <= 15) {
+							client.sendFile(from, `./temp/yt/${songinfo.videoId}.mp3`, `${songinfo.videoId}.mp3`, null, id).then(f => {
+								try {
+									fs.unlinkSync(`./temp/yt/${songinfo.videoId}.mp3`);
+									console.log(`successfully deleted ${songinfo.videoId}.mp3`);
+								} catch (err) {
+									// handle the error
+									console.log(err);
+								}
+							})
+						} else {
+							return client.reply(from, `O arquivo é muito grande ✋😥`, id)
+						}
 					});
 				break
 
@@ -984,7 +913,7 @@ module.exports = msgHandler = async (client, message) => {
 			case 'mp4':
 				if (args.length == 0) return client.reply(from, `Baixe vídeos do youtube\nUso: ${prefix}ytmp4 [link_yt]`, id)
 				if (!ytdl.validateURL(args[0])) return client.reply(from, `O url não é válido`, id) //  Verifica se é um url valido do youtube
-				const video = await ytdl.getInfo(args[0]);
+				const video = await ytdl.getInfo(args[0])
 				var ytmp3ID = args[0].replace('https://m.youtu.be/', '').replace('https://youtu.be/', '').replace('https://www.youtube.com/', '').replace('watch?v=', '') // Remove o link e pega só o ID
 
 				const videoSort = video.formats.sort(
@@ -998,24 +927,21 @@ module.exports = msgHandler = async (client, message) => {
 						format.hasVideo === true
 				)[0];
 
-				const mp4size = await axios.get(`http://st4rz.herokuapp.com/api/ytv?url=https://youtu.be/${ytmp3ID}`)
-				const mp4fsize = mp4size.data.filesize.replace(' MB', '').replace('Download  ', 'Impossivel calcular')
-				console.log(mp4fsize)
-				const mp4impo = mp4size.data.filesize.replace('Download  ', 'um peso muito superior que não posso calcular')
 				const shortUrl = await urlShortener(videoData.url);
 				console.log('Video link: ' + shortUrl);
 
-				if (mp4fsize >= 16.0 || mp4size.data.filesize.endsWith('Download  ') || mp4size.data.filesize.endsWith('GB')) {
-					return client.reply(from, `Desculpe, para evitar banimentos do WhatsApp, o limite de envio de videos é de 16MB, e esse possui ${mp4impo.replace('    ', ' ')}.\n\nPorém vou deixar o link para você baixar aqui: ${shortUrl}`, id)
+				if (videoData.contentLength != undefined) {
+					console.log(videoData.contentLength);
+					if (videoData.contentLength >= 15000000) {
+						return client.reply(from, `Desculpe, para evitar banimentos do WhatsApp, o limite de envio de videos é de 16MB, e esse possui ${mp4impo.replace('    ', ' ')}.\n\nPorém vou deixar o link para você baixar aqui: ${shortUrl}`, id)
+					} else {
+						client.reply(from, `Preparando *${video.videoDetails.title}*\nAguarde...`, id)
+						await client.sendFileFromUrl(message.chatId, videoData.url, 'youtube.mp4', `Link de download: ${shortUrl}`
+						);
+					}
+				} else {
+					await client.reply(message.chatId, `*${video.videoDetails.title}*\n\nTalvez o vídeo era muito grande, ou eu não consegui avaliar o tamanho dele...\n De qualquer forma, aqui está o link de download: ${shortUrl}`, id)
 				}
-
-				client.reply(from, `Preparando *${video.videoDetails.title}*\nAguarde...`, id)
-				await client.sendFileFromUrl(
-					message.chatId,
-					videoData.url,
-					'youtube.mp4',
-					`Link de download: ${shortUrl}`
-				);
 				break
 
 			case 'video':
@@ -1060,54 +986,74 @@ module.exports = msgHandler = async (client, message) => {
 
 
 			case 'play':
-				if (args.length == 0) return client.reply(from, 'Você usou incorretamente.', id)
-				axios.get(`http://arugaytdl.herokuapp.com/search?q=${body.slice(6)}`)
-					.then(async (res) => {
-						if (res.data[0].uploadDate.endsWith('years ago')) {
-							var playre = res.data[0].uploadDate.replace('years ago', 'Anos atrás')
-						} else if (res.data[0].uploadDate.endsWith('hours ago')) {
-							var playre = res.data[0].uploadDate.replace('hours ago', 'Horas atrás')
-						} else if (res.data[0].uploadDate.endsWith('minutes ago')) {
-							var playre = res.data[0].uploadDate.replace('minutes ago', 'Minutos atrás')
-						} else if (res.data[0].uploadDate.endsWith('day ago')) {
-							var playre = res.data[0].uploadDate.replace('day ago', 'Dia atrás')
-						} else if (res.data[0].uploadDate.endsWith('months ago')) {
-							var playre = res.data[0].uploadDate.replace('months ago', 'Meses atrás')
-						} else if (res.data[0].uploadDate.endsWith('seconds ago')) {
-							var playre = res.data[0].uploadDate.replace('seconds ago', 'Segundos atrás')
-						} else if (res.data[0].uploadDate.endsWith('undefined')) {
-							var videore = res.data[0].uploadDate.replace('undefined', 'Indefinido')
-						} else if (res.data[0].uploadDate.endsWith('null')) {
-							var videore = res.data[0].uploadDate.replace('null', 'Indefinido')
-						}
-						const asize = await axios.get(`http://st4rz.herokuapp.com/api/yta?url=http://youtu.be/${res.data[0].id}`)
-						const afsize = asize.data.filesize.replace(' MB', '')
-						console.log(afsize)
-						if (afsize >= 16.0 || asize.data.filesize.endsWith('GB')) {
-							client.reply(from, `Desculpe, para evitar banimentos do WhatsApp, o limite de envio de audios é de 16MB, e esse possui ${asize.data.filesize}.`, id)
+				if (args.length == 0) return client.reply(from, `Você precisa me dar algo para pesquisar\nUso: ${prefix}play [pesquisa]`, id)
+				const playOptions = {
+					limit: 1,
+					gl: 'BR',
+					hl: 'pt'
+				}
+				const res = await ytsr(body.slice(6), playOptions).catch(err => {
+					return client.reply(from, `Não consegui executar a funçõa, me desculpe 😔`, id)
+				})
+
+				const videoResult = res.items.filter(item => item.type === 'video')[0]
+
+				if (!videoResult) {
+					return client.reply(from, `Não obtive resultados para a sua pesquisa 😔`, id)
+				}
+
+				const playInfo = await ytdl.getInfo(videoResult.url, {
+					quality: 'highestaudio'
+				});
+
+				let playStream = ytdl(videoResult.url, {
+					quality: 'highestaudio'
+				});
+
+				let songPlayInfo = {
+					title: playInfo.videoDetails.title,
+					url: playInfo.videoDetails.video_url,
+					lengthSeconds: playInfo.videoDetails.lengthSeconds,
+					authorName: playInfo.videoDetails.author.name,
+					videoId: playInfo.videoDetails.videoId,
+					isPrivate: playInfo.videoDetails.isPrivate,
+				}
+
+				client.reply(from, `Encontrei *${songPlayInfo.title}*\n*De:* ${songPlayInfo.authorName}\nEspero muito que seja o correto\nAguarde...`, id)
+
+				//console.log(songinfo);
+				let testPlaySize = (((songPlayInfo.lengthSeconds * 128000) / 8) / 1024) / 1024
+				console.log(`Estimativa de tamanho do vídeo: ${testPlaySize} MB`);
+
+				if (testPlaySize >= 15) {
+					return client.reply(from, `O arquivo é muito grande ✋😥`, id)
+				}
+
+				if (songPlayInfo.lengthSeconds > 900) {
+					return client.reply(from, `O vídeo é longo demais ✋😥`, id)
+				}
+
+				ffmpeg(playStream)
+					.audioBitrate(128)
+					.save(`./temp/yt/${songPlayInfo.videoId}.mp3`)
+					.on('end', () => {
+						var playStats = fs.statSync(`./temp/yt/${songPlayInfo.videoId}.mp3`)
+						let realSize = playStats.size / (1024 * 1024);
+						console.log(`Tamanho real: ${realSize} MB`);
+						if (realSize <= 15) {
+							client.sendFile(from, `./temp/yt/${songPlayInfo.videoId}.mp3`, `${songPlayInfo.videoId}.mp3`, null, id).then(f => {
+								try {
+									fs.unlinkSync(`./temp/yt/${songPlayInfo.videoId}.mp3`);
+									console.log(`successfully deleted ${songPlayInfo.videoId}.mp3`);
+								} catch (err) {
+									// handle the error
+									console.log(err);
+								}
+							})
 						} else {
-							await client.sendFileFromUrl(from, `${res.data[0].thumbnail}`, ``, `*Titulo:* ${res.data[0].title}\n*Duração:* ${res.data[0].duration} segundos\n*Enviado por:* ${res.data[0].channel.name}\n*Foi feito a:* ${playre}\n*Visualizações:* ${res.data[0].viewCount}\n\nEspero que eu tenha acertado e...agora é so esperar!!\nEvite usar o comando novamente até eu enviar o áudio`, id)
-
-							let stream = ytdl(res.data[0].id, {
-								quality: 'highestaudio'
-							});
-
-							ffmpeg(stream)
-								.audioBitrate(128)
-								.save(`./media/yt/${res.data[0].id}.mp3`)
-								.on('end', () => {
-									client.sendFile(from, `./media/yt/${res.data[0].id}.mp3`, `${res.data[0].id}.mp3`, null, id).then(f => {
-										try {
-											fs.unlinkSync(`./media/yt/${res.data[0].id}.mp3`);
-											console.log(`successfully deleted ${res.data[0].id}.mp3`);
-										} catch (err) {
-											// handle the error
-											console.log(err);
-										}
-									})
-								});
+							return client.reply(from, `O arquivo é muito grande ✋😥`, id)
 						}
-					})
+					});
 				break
 
 
@@ -1237,204 +1183,204 @@ module.exports = msgHandler = async (client, message) => {
 				if (dataText.length > 500) return client.reply(from, 'Desculpa, mas o limite são 500 letras...', id)
 				var dataBhs = body.slice(5, 7).toLowerCase()
 				if (dataBhs == 'id') {
-					ttsId.save('./lib/media/tts/resId.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resId.mp3', id)
+					ttsId.save('./temp/tts/resId.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resId.mp3', id)
 					})
 				} else if (dataBhs == 'en') {
-					ttsEn.save('./lib/media/tts/resEn.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resEn.mp3', id)
+					ttsEn.save('./temp/tts/resEn.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resEn.mp3', id)
 					})
 				} else if (dataBhs == 'jp') {
-					ttsJp.save('./lib/media/tts/resJp.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resJp.mp3', id)
+					ttsJp.save('./temp/tts/resJp.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resJp.mp3', id)
 					})
 				} else if (dataBhs == 'de') {
-					ttsDe.save('./lib/media/tts/resDe.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resDe.mp3', id)
+					ttsDe.save('./temp/tts/resDe.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resDe.mp3', id)
 					})
 				} else if (dataBhs == 'br') {
-					ttsBr.save('./lib/media/tts/resBr.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resBr.mp3', id)
+					ttsBr.save('./temp/tts/resBr.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resBr.mp3', id)
 					})
 				} else if (dataBhs == 'ru') {
-					ttsRu.save('./lib/media/tts/resRu.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resRu.mp3', id)
+					ttsRu.save('./temp/tts/resRu.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resRu.mp3', id)
 					})
 				} else if (dataBhs == 'ar') {
-					ttsAr.save('./lib/media/tts/resAr.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resAr.mp3', id)
+					ttsAr.save('./temp/tts/resAr.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resAr.mp3', id)
 					})
 				} else if (dataBhs == 'pt') {
-					ttsPt.save('./lib/media/tts/resPt.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resPt.mp3', id)
+					ttsPt.save('./temp/tts/resPt.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resPt.mp3', id)
 					})
 				} else if (dataBhs == 'af') {
-					ttsAf.save('./lib/media/tts/resAf.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resAf.mp3', id)
+					ttsAf.save('./temp/tts/resAf.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resAf.mp3', id)
 					})
 				} else if (dataBhs == 'sq') {
-					ttsSq.save('./lib/media/tts/resSq.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resSq.mp3', id)
+					ttsSq.save('./temp/tts/resSq.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resSq.mp3', id)
 					})
 				} else if (dataBhs == 'hy') {
-					ttsHy.save('./lib/media/tts/resHy.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resHy.mp3', id)
+					ttsHy.save('./temp/tts/resHy.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resHy.mp3', id)
 					})
 				} else if (dataBhs == 'ca') {
-					ttsCa.save('./lib/media/tts/resCa.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resCa.mp3', id)
+					ttsCa.save('./temp/tts/resCa.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resCa.mp3', id)
 					})
 				} else if (dataBhs == 'zh') {
-					ttsZh.save('./lib/media/tts/resZh.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resZh.mp3', id)
+					ttsZh.save('./temp/tts/resZh.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resZh.mp3', id)
 					})
 				} else if (dataBhs == 'cn') {
-					ttsCn.save('./lib/media/tts/resCn.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resCn.mp3', id)
+					ttsCn.save('./temp/tts/resCn.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resCn.mp3', id)
 					})
 				} else if (dataBhs == 'tw') {
-					ttsTw.save('./lib/media/tts/resTw.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resTw.mp3', id)
+					ttsTw.save('./temp/tts/resTw.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resTw.mp3', id)
 					})
 				} else if (dataBhs == 'yu') {
-					ttsYu.save('./lib/media/tts/resYue.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resYue.mp3', id)
+					ttsYu.save('./temp/tts/resYue.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resYue.mp3', id)
 					})
 				} else if (dataBhs == 'hr') {
-					ttsHr.save('./lib/media/tts/resHr.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resHr.mp3', id)
+					ttsHr.save('./temp/tts/resHr.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resHr.mp3', id)
 					})
 				} else if (dataBhs == 'cs') {
-					ttsCs.save('./lib/media/tts/resCs.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resCs.mp3', id)
+					ttsCs.save('./temp/tts/resCs.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resCs.mp3', id)
 					})
 				} else if (dataBhs == 'da') {
-					ttsDa.save('./lib/media/tts/resDa.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resDa.mp3', id)
+					ttsDa.save('./temp/tts/resDa.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resDa.mp3', id)
 					})
 				} else if (dataBhs == 'nl') {
-					ttsNl.save('./lib/media/tts/resNl.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resNl.mp3', id)
+					ttsNl.save('./temp/tts/resNl.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resNl.mp3', id)
 					})
 				} else if (dataBhs == 'au') {
-					ttsAu.save('./lib/media/tts/resAu.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resAu.mp3', id)
+					ttsAu.save('./temp/tts/resAu.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resAu.mp3', id)
 					})
 				} else if (dataBhs == 'uk') {
-					ttsUk.save('./lib/media/tts/resUk.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resUk.mp3', id)
+					ttsUk.save('./temp/tts/resUk.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resUk.mp3', id)
 					})
 				} else if (dataBhs == 'us') {
-					ttsUs.save('./lib/media/tts/resUs.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resUs.mp3', id)
+					ttsUs.save('./temp/tts/resUs.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resUs.mp3', id)
 					})
 				} else if (dataBhs == 'eo') {
-					ttsEo.save('./lib/media/tts/resEo.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resEo.mp3', id)
+					ttsEo.save('./temp/tts/resEo.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resEo.mp3', id)
 					})
 				} else if (dataBhs == 'fi') {
-					ttsFi.save('./lib/media/tts/resFi.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resFi.mp3', id)
+					ttsFi.save('./temp/tts/resFi.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resFi.mp3', id)
 					})
 				} else if (dataBhs == 'fr') {
-					ttsFr.save('./lib/media/tts/resFr.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resFr.mp3', id)
+					ttsFr.save('./temp/tts/resFr.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resFr.mp3', id)
 					})
 				} else if (dataBhs == 'el') {
-					ttsEl.save('./lib/media/tts/resEl.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resEl.mp3', id)
+					ttsEl.save('./temp/tts/resEl.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resEl.mp3', id)
 					})
 				} else if (dataBhs == 'ht') {
-					ttsHt.save('./lib/media/tts/resJp.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resHt.mp3', id)
+					ttsHt.save('./temp/tts/resJp.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resHt.mp3', id)
 					})
 				} else if (dataBhs == 'hi') {
-					ttsHi.save('./lib/media/tts/resHi.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resHi.mp3', id)
+					ttsHi.save('./temp/tts/resHi.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resHi.mp3', id)
 					})
 				} else if (dataBhs == 'hu') {
-					ttsHu.save('./lib/media/tts/resHu.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resHu.mp3', id)
+					ttsHu.save('./temp/tts/resHu.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resHu.mp3', id)
 					})
 				} else if (dataBhs == 'is') {
-					ttsIs.save('./lib/media/tts/resIs.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resIs.mp3', id)
+					ttsIs.save('./temp/tts/resIs.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resIs.mp3', id)
 					})
 				} else if (dataBhs == 'it') {
-					ttsIt.save('./lib/media/tts/resIt.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resIt.mp3', id)
+					ttsIt.save('./temp/tts/resIt.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resIt.mp3', id)
 					})
 				} else if (dataBhs == 'ko') {
-					ttsKo.save('./lib/media/tts/resKo.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resKo.mp3', id)
+					ttsKo.save('./temp/tts/resKo.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resKo.mp3', id)
 					})
 				} else if (dataBhs == 'la') {
-					ttsLa.save('./lib/media/tts/resLa.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resLa.mp3', id)
+					ttsLa.save('./temp/tts/resLa.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resLa.mp3', id)
 					})
 				} else if (dataBhs == 'lv') {
-					ttsLv.save('./lib/media/tts/resLv.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resLv.mp3', id)
+					ttsLv.save('./temp/tts/resLv.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resLv.mp3', id)
 					})
 				} else if (dataBhs == 'mk') {
-					ttsMk.save('./lib/media/tts/resMk.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resMk.mp3', id)
+					ttsMk.save('./temp/tts/resMk.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resMk.mp3', id)
 					})
 				} else if (dataBhs == 'no') {
-					ttsNo.save('./lib/media/tts/resNo.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resNo.mp3', id)
+					ttsNo.save('./temp/tts/resNo.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resNo.mp3', id)
 					})
 				} else if (dataBhs == 'pl') {
-					ttsPl.save('./lib/media/tts/resPl.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resPl.mp3', id)
+					ttsPl.save('./temp/tts/resPl.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resPl.mp3', id)
 					})
 				} else if (dataBhs == 'ro') {
-					ttsRo.save('./lib/media/tts/resRo.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resRo.mp3', id)
+					ttsRo.save('./temp/tts/resRo.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resRo.mp3', id)
 					})
 				} else if (dataBhs == 'sr') {
-					ttsSr.save('./lib/media/tts/resSr.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resSr.mp3', id)
+					ttsSr.save('./temp/tts/resSr.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resSr.mp3', id)
 					})
 				} else if (dataBhs == 'sk') {
-					ttsSk.save('./lib/media/tts/resSk.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resSk.mp3', id)
+					ttsSk.save('./temp/tts/resSk.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resSk.mp3', id)
 					})
 				} else if (dataBhs == 'es') {
-					ttsEs.save('./lib/media/tts/resEs.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resEs.mp3', id)
+					ttsEs.save('./temp/tts/resEs.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resEs.mp3', id)
 					})
 				} else if (dataBhs == 'sp') {
-					ttsSp.save('./lib/media/tts/resSp.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resSp.mp3', id)
+					ttsSp.save('./temp/tts/resSp.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resSp.mp3', id)
 					})
 				} else if (dataBhs == 'su') {
-					ttsSu.save('./lib/media/tts/resSu.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resSu.mp3', id)
+					ttsSu.save('./temp/tts/resSu.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resSu.mp3', id)
 					})
 				} else if (dataBhs == 'sw') {
-					ttsSw.save('./lib/media/tts/resSw.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resSk.mp3', id)
+					ttsSw.save('./temp/tts/resSw.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resSk.mp3', id)
 					})
 				} else if (dataBhs == 'sv') {
-					ttsSv.save('./lib/media/tts/resSv.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resSv.mp3', id)
+					ttsSv.save('./temp/tts/resSv.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resSv.mp3', id)
 					})
 				} else if (dataBhs == 'ta') {
-					ttsTa.save('./lib/media/tts/resTa.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resTa.mp3', id)
+					ttsTa.save('./temp/tts/resTa.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resTa.mp3', id)
 					})
 				} else if (dataBhs == 'tr') {
-					ttsTr.save('./lib/media/tts/resTr.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resTr.mp3', id)
+					ttsTr.save('./temp/tts/resTr.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resTr.mp3', id)
 					})
 				} else if (dataBhs == 'vi') {
-					ttsVi.save('./lib/media/tts/resVi.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resVi.mp3', id)
+					ttsVi.save('./temp/tts/resVi.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resVi.mp3', id)
 					})
 				} else if (dataBhs == 'cy') {
-					ttsCy.save('./lib/media/tts/resCy.mp3', dataText, function () {
-						client.sendPtt(from, './lib/media/tts/resCy.mp3', id)
+					ttsCy.save('./temp/tts/resCy.mp3', dataText, function () {
+						client.sendPtt(from, './temp/tts/resCy.mp3', id)
 					})
 				} else {
 					client.reply(from, `Hmm, '${body.slice(5, 7)}' não é um idioma compativel, para idiomas compativeis digite ${prefix}idiomas.`, id)
@@ -1449,7 +1395,7 @@ module.exports = msgHandler = async (client, message) => {
 
 			case 'resposta':
 				if (args.length == 0) return client.reply(from, 'Faltou a frase para ser adicionada.', id)
-				fs.appendFile('./lib/reply.txt', `\n${body.slice(10)}`)
+				fs.appendFile('./database/bot/reply.txt', `\n${body.slice(10)}`)
 				await client.reply(from, 'Frase adicionada.', id)
 				break
 
@@ -1461,26 +1407,26 @@ module.exports = msgHandler = async (client, message) => {
 					const a = spiris.data.success
 					if (a == '') {
 						console.log('Request falhou, usando respostas locais...')
-						let rfua = fs.readFileSync('./lib/reply.txt').toString().split('\n')
+						let rfua = fs.readFileSync('./database/bot/reply.txt').toString().split('\n')
 						let repy = rfua[Math.floor(Math.random() * rfua.length)]
 						let resfl = repy.replace('%name$', '${name}').replace('%battery%', '${lvpc}')
 						console.log(resfl)
-						sppt.save('./lib/media/tts/resPtm.mp3', resfl, function () {
-							client.sendPtt(from, './lib/media/tts/resPtm.mp3', id)
+						sppt.save('./temp/tts/resPtm.mp3', resfl, function () {
+							client.sendPtt(from, './temp/tts/resPtm.mp3', id)
 						})
 					} else {
-						sppt.save('./lib/media/tts/resPtm.mp3', a, function () {
-							client.sendPtt(from, './lib/media/tts/resPtm.mp3', id)
+						sppt.save('./temp/tts/resPtm.mp3', a, function () {
+							client.sendPtt(from, './temp/tts/resPtm.mp3', id)
 						})
 					}
 				} catch (error) {
 					console.log('Request falhou, usando respostas locais...')
-					let rfua = fs.readFileSync('./lib/reply.txt').toString().split('\n')
+					let rfua = fs.readFileSync('./database/bot/reply.txt').toString().split('\n')
 					let repy = rfua[Math.floor(Math.random() * rfua.length)]
 					let resfl = repy.replace('%name$', '${name}').replace('%battery%', '${lvpc}')
 					console.log(resfl)
-					sppt.save('./lib/media/tts/resPtm.mp3', resfl, function () {
-						client.sendPtt(from, './lib/media/tts/resPtm.mp3', id)
+					sppt.save('./temp/tts/resPtm.mp3', resfl, function () {
+						client.sendPtt(from, './temp/tts/resPtm.mp3', id)
 					})
 				}
 				break
@@ -1491,7 +1437,7 @@ module.exports = msgHandler = async (client, message) => {
 					const iris = await axios.get(`http://simsumi.herokuapp.com/api?text=${body.slice(6)}&lang=pt`)
 					if (iris.data.success == '') {
 						console.log('Request falhou, usando respostas locais...')
-						let rndrl = fs.readFileSync('./lib/reply.txt').toString().split('\n')
+						let rndrl = fs.readFileSync('./database/bot/reply.txt').toString().split('\n')
 						let repl = rndrl[Math.floor(Math.random() * rndrl.length)]
 						let resmf = repl.replace('%name$', `${name}`).replace('%battery%', `${lvpc}`)
 						console.log(resmf)
@@ -1501,7 +1447,7 @@ module.exports = msgHandler = async (client, message) => {
 					}
 				} catch (error) {
 					console.log('Request falhou, usando respostas locais...')
-					let rndrl = fs.readFileSync('./lib/reply.txt').toString().split('\n')
+					let rndrl = fs.readFileSync('./database/bot/reply.txt').toString().split('\n')
 					let repl = rndrl[Math.floor(Math.random() * rndrl.length)]
 					let resmf = repl.replace('%name$', `${name}`).replace('%battery%', `${lvpc}`)
 					console.log(resmf)
@@ -1516,11 +1462,6 @@ module.exports = msgHandler = async (client, message) => {
 				const wallp = await wall(quere)
 				console.log(wallp)
 				await client.sendFileFromUrl(from, wallp, 'wallp.jpg', '', id)
-				break
-
-
-			case 'ping':
-				client.sendText(from, `🏓 Pong!\n_Minha velocidade é de ${processTime(t, moment())} segundos._`)
 				break
 
 			case 'roll':
@@ -1565,11 +1506,11 @@ module.exports = msgHandler = async (client, message) => {
 				if (isGroupMsg && isGroupOwner) {
 					if (args[0].toLowerCase() == 'enable') {
 						nsfw_.push(chat.id)
-						fs.writeFileSync('./lib/NSFW.json', JSON.stringify(nsfw_))
+						fs.writeFileSync('./database/group/NSFW.json', JSON.stringify(nsfw_))
 						client.reply(from, 'Comandos NSFW ativados neste grupo!', id)
 					} else if (args[0].toLowerCase() == 'disable') {
 						nsfw_.splice(chat.id, 1)
-						fs.writeFileSync('./lib/NSFW.json', JSON.stringify(nsfw_))
+						fs.writeFileSync('./database/group/NSFW.json', JSON.stringify(nsfw_))
 						client.reply(from, 'Comandos nsfw desativamos para este grupo.', id)
 					} else {
 						client.reply(from, 'Defina enable ou disable', id)
@@ -1577,11 +1518,11 @@ module.exports = msgHandler = async (client, message) => {
 				} else if (isGroupMsg && isOwner) {
 					if (args[0].toLowerCase() == 'enable') {
 						nsfw_.push(chat.id)
-						fs.writeFileSync('./lib/NSFW.json', JSON.stringify(nsfw_))
+						fs.writeFileSync('./database/group/NSFW.json', JSON.stringify(nsfw_))
 						client.reply(from, 'Comandos NSFW ativados neste grupo!', id)
 					} else if (args[0].toLowerCase() == 'disable') {
 						nsfw_.splice(chat.id, 1)
-						fs.writeFileSync('./lib/NSFW.json', JSON.stringify(nsfw_))
+						fs.writeFileSync('./database/group/NSFW.json', JSON.stringify(nsfw_))
 						client.reply(from, 'Comandos nsfw desativamos para este grupo.', id)
 					} else {
 						client.reply(from, 'Defina enable ou disable', id)
@@ -1600,12 +1541,12 @@ module.exports = msgHandler = async (client, message) => {
 				if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
 				if (args[0] == 'on') {
 					welkom.push(chat.id)
-					fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
+					fs.writeFileSync('./database/group/welcome.json', JSON.stringify(welkom))
 					client.reply(from, 'Feito! As funções de Boas-Vindas e Good-Bye foram acionadas.', id)
 				} else if (args[0] == 'off') {
 					let welcom = welkom.indexOf(chatId)
 					welkom.splice(welcom, 1)
-					fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
+					fs.writeFileSync('./database/group/welcome.json', JSON.stringify(welkom))
 					client.reply(from, 'Entendido! Desativei as opções de Boas-Vindas e Good-Bye.', id)
 				} else {
 					client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
@@ -1938,7 +1879,7 @@ module.exports = msgHandler = async (client, message) => {
 							client.reply(from, 'Ora ora, recebi um erro.', id)
 						})
 				} else {
-					client.sendFile(from, './lib/media/img/tutod.jpg', 'Tutor.jpg', 'Evite usar isso com fan-mades, desenhos do pinterest ou outros, use apenas com prints de episodios de anime, ok?', id)
+					client.sendFile(from, './media/img/tutod.jpg', 'Tutor.jpg', 'Evite usar isso com fan-mades, desenhos do pinterest ou outros, use apenas com prints de episodios de anime, ok?', id)
 				}
 				break
 
@@ -2566,7 +2507,7 @@ module.exports = msgHandler = async (client, message) => {
 
 			case 'waifu':
 				if (triple == 1) {
-					const total = fs.readFileSync('./lib/waifu.json')
+					const total = fs.readFileSync('./database/bot/waifu.json')
 					const parsew = JSON.parse(total)
 					const organi = Math.floor(Math.random() * parsew.length)
 					const finale = parsew[organi]
@@ -2582,7 +2523,7 @@ module.exports = msgHandler = async (client, message) => {
 
 
 			case 'husb':
-				const diti = fs.readFileSync('./lib/husbu.json')
+				const diti = fs.readFileSync('./database/bot/husbu.json')
 				const ditiJsin = JSON.parse(diti)
 				const rindIndix = Math.floor(Math.random() * ditiJsin.length)
 				const rindKiy = ditiJsin[rindIndix]
@@ -3061,7 +3002,7 @@ module.exports = msgHandler = async (client, message) => {
 				if (args.length == 0) return client.reply(from, 'Sinto cheiro de ortografia incorreta [faltou https:// ?]!', id)
 				await ss(_query)
 				await sleep(4000)
-				await client.sendFile(from, './lib/media/img/screenshot.jpeg', 'ss.jpeg', 'Se certifique de evitar usar isso com pornografia.', id)
+				await client.sendFile(from, './temp/img/screenshot.jpeg', 'ss.jpeg', 'Se certifique de evitar usar isso com pornografia.', id)
 					.catch(() => client.reply(from, `Erro na screenshot do site ${_query}`, id))
 				break
 

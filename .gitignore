@@ -13,17 +13,14 @@ mediaSort
 .vscode/*
 settings/api.json
 settings/settings.json
+model/*
 
-# media
-media/yt/*.mp3
-media/yt/*.mp4
-lib/media/tts/*
-lib/media/poll/*.json
-lib/media/img/noBg.png
-lib/media/sticker.png
-lib/media/stickergf.gif
-lib/media/stickergif.mp4
-lib/media/img/imageupl.jpg
+# temp
+temp/img/*.*
+temp/poll/*.*
+temp/stickers/*.*
+temp/tts/*.*
+temp/yt/*.*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
