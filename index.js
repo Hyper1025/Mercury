@@ -71,11 +71,11 @@ const start = (client = new Client()) => {
                 client.deleteChat(newGroup.id)  // Deleta o grupo
                 console.log(color('[SAINDO]'), color('Limite de usuários atingido', 'yellow'), 'em', color(newGroup.name))
             })
-        } else if (newGroup.groupMetadata.participants.length >= memberMinimum) {
+        } else if (newGroup.groupMetadata.participants.length <= memberMinimum) {
             await client.sendText(newGroup.id, `Desculpe, o mínimo de usuários permitidos em um grupo para que o bot possa ficar é de ${memberMinimum}, esse grupo tem ${newGroup.groupMetadata.participants.length}.\nInfelizmente, terei de sair desse grupo ✋😔`).then(() => {
                 client.leaveGroup(newGroup.id)  // Sai do grupo
                 client.deleteChat(newGroup.id)  // Deleta o grupo
-                console.log(color('[SAINDO]'), color('Limite de usuários atingido', 'yellow'), 'em', color(newGroup.name))
+                console.log(color('[SAINDO]'), color('Não tem mínimo de usuários', 'yellow'), 'em', color(newGroup.name))
             })
         }
         else {
