@@ -53,7 +53,7 @@ const errorurl2 = 'https://steamuserimages-a.akamaihd.net/ugc/954087817129084207
 
 /********** SETTINGS FILES **********/
 const { apiRemoveBg, apiImgBB, apiNasa } = JSON.parse(fs.readFileSync('./settings/api.json'))
-const { ownerNumber, groupLimit, prefix, memberLimit, memberMinimum, botName } = JSON.parse(fs.readFileSync('./settings/settings.json'))
+const { ownerNumber, prefix, botName, memberLimit, memberMinimum, groupLimit, alwaysAllowDDD, DddCountryAllowed } = JSON.parse(fs.readFileSync('./settings/settings.json'))
 /********** END OF SETTINGS FILES **********/
 
 
@@ -2396,7 +2396,7 @@ module.exports = msgHandler = async (client, message) => {
 				const check = await client.inviteInfo(gplk)
 				if (!isLink) return client.reply(from, 'Link errado', id)
 
-				if (from.startsWith('5555')) { // entra em grupos que tenham ddd 55, independentemente da quantidade de membros ou grupos
+				if (from.startsWith(alwaysAllowDDD)) { // entra em grupos que tenham ddd em 'alwaysAllowDDD' definido no arquivo 'settings.json', independentemente da quantidade de membros ou grupos
 					if (check.status === 200) {
 						await client.joinGroupViaLink(gplk)
 						await client.reply(from, 'Entrando no grupo...')
@@ -2405,8 +2405,9 @@ module.exports = msgHandler = async (client, message) => {
 					}
 				}
 				else {
-					if (tGr.length > groupLimit) return client.reply(from, 'Já estou no maximo de grupos, desculpe.', id)
-					if (check.size < memberMinimum) return client.reply(from, 'Só posso funcionar em grupos com mais de 30 pessoas.', id)
+					if (tGr.length >= groupLimit) return client.reply(from, `Desculpe, o máximo de grupos que o Bot pode estar simultaneamente foi atingido.\nPortanto não posso ficar aqui ✋😔\n\nLimite: ${groupLimit}`, id)
+					if (check.size >= memberLimit) return client.reply(from, `Desculpe, o máximo de usuários permitidos em um grupo para que o bot possa ficar é de ${memberLimit}, esse grupo tem ${check.size}.\nInfelizmente, terei de sair desse grupo ✋😔`)
+					if (check.size <= memberMinimum) return client.reply(from, `Desculpe, o mínimo de usuários permitidos em um grupo para que o bot possa ficar é de ${memberMinimum}, esse grupo tem ${check.size}.\nInfelizmente, não posso entrar no grupo ✋😔`, id)
 					if (check.status === 200) {
 						await client.joinGroupViaLink(gplk)
 						await client.reply(from, 'Entrando no grupo...')
