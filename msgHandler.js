@@ -195,501 +195,504 @@ module.exports = msgHandler = async (client, message) => {
 
 		switch (command) {
 
-			case 'ping':
-				client.sendText(from, `🏓 Pong!\n_Minha velocidade é de ${processTime(t, moment())} segundos._`)
-				break
+			// case 'ping':
+			// 	client.sendText(from, `🏓 Pong!\n_Minha velocidade é de ${processTime(t, moment())} segundos._`)
+			// 	break
 
-			case 'fig':
-			case 'sticker':
-			case 'stiker':
-				if (isMedia && type === 'image') {
-					const mediaData = await decryptMedia(message, uaOverride)
+			// case 'fig':
+			// case 'sticker':
+			// case 'stiker':
+			// case 'figurinha':
+			// 	if (isMedia && type === 'image') {
+			// 		const mediaData = await decryptMedia(message, uaOverride)
 
-					await sharp(mediaData)
-						.resize(512, 512, {
-							fit: sharp.fit.contain,
-							background: { r: 0, g: 0, b: 0, alpha: 0 }
-						})
-						.toFile('./temp/stickers/sticker.png')
+			// 		await sharp(mediaData)
+			// 			.resize(512, 512, {
+			// 				fit: sharp.fit.contain,
+			// 				background: { r: 0, g: 0, b: 0, alpha: 0 }
+			// 			})
+			// 			.toFile('./temp/stickers/sticker.png')
 
-					var imgReadToBase = await fs.readFileSync('./temp/stickers/sticker.png', {
-						encoding: "base64"
-					})
+			// 		var imgReadToBase = await fs.readFileSync('./temp/stickers/sticker.png', {
+			// 			encoding: "base64"
+			// 		})
 
-					await client.sendImageAsSticker(from, `data:image/jpeg;base64,${imgReadToBase.toString('base64')}`)
-						.catch(() => {
-							client.reply(from, 'Erro', id)
-						})
+			// 		await client.sendImageAsSticker(from, `data:image/jpeg;base64,${imgReadToBase.toString('base64')}`)
+			// 			.catch(() => {
+			// 				client.reply(from, 'Erro', id)
+			// 			})
 
-				} else if (quotedMsg && quotedMsg.type == 'image') {
+			// 	} else if (quotedMsg && quotedMsg.type == 'image') {
 
-					const mediaData = await decryptMedia(quotedMsg, uaOverride)
+			// 		const mediaData = await decryptMedia(quotedMsg, uaOverride)
 
-					await sharp(mediaData)
-						.resize(512, 512, {
-							fit: sharp.fit.contain,
-							background: { r: 0, g: 0, b: 0, alpha: 0 }
-						})
-						.toFile('./temp/stickers/sticker.png')
+			// 		await sharp(mediaData)
+			// 			.resize(512, 512, {
+			// 				fit: sharp.fit.contain,
+			// 				background: { r: 0, g: 0, b: 0, alpha: 0 }
+			// 			})
+			// 			.toFile('./temp/stickers/sticker.png')
 
-					var imgReadToBase = await fs.readFileSync('./temp/stickers/sticker.png', {
-						encoding: "base64"
-					})
+			// 		var imgReadToBase = await fs.readFileSync('./temp/stickers/sticker.png', {
+			// 			encoding: "base64"
+			// 		})
 
-					await client.sendImageAsSticker(from, `data:image/jpeg;base64,${imgReadToBase.toString('base64')}`)
-						.catch(() => {
-							client.reply(from, 'Erro', id)
-						})
-				} else if (args.length == 1) {
-					const url = args[1]
-					if (url.match(isUrl)) {
-						await client.sendStickerfromUrl(from, url, {
-							method: 'get'
-						})
-							.catch(err => console.log('Erro: ', err))
-					} else {
-						client.reply(from, mess.error.Iv, id)
-					}
-				} else {
-					client.reply(from, mess.error.St, id)
-				}
-				break
+			// 		await client.sendImageAsSticker(from, `data:image/jpeg;base64,${imgReadToBase.toString('base64')}`)
+			// 			.catch(() => {
+			// 				client.reply(from, 'Erro', id)
+			// 			})
+			// 	} else if (args.length == 1) {
+			// 		const url = args[1]
+			// 		if (url.match(isUrl)) {
+			// 			await client.sendStickerfromUrl(from, url, {
+			// 				method: 'get'
+			// 			})
+			// 				.catch(err => console.log('Erro: ', err))
+			// 		} else {
+			// 			client.reply(from, mess.error.Iv, id)
+			// 		}
+			// 	} else {
+			// 		client.reply(from, mess.error.St, id)
+			// 	}
+			// 	break
 
-			case 'figc':
-			case 'stickercover':
-			case 'stikercover':
-				if ((isMedia || isQuotedImage) && args.length === 0) {
-					const encryptMedia = isQuotedImage ? quotedMsg : message
-					const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
-					const mediaData = await decryptMedia(encryptMedia, uaOverride)
-					const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
-					client.sendImageAsSticker(from, imageBase64)
-				} else if (args.length == 1) {
-					const url = args[1]
-					if (url.match(isUrl)) {
-						await client.sendStickerfromUrl(from, url, {
-							method: 'get'
-						})
-							.catch(err => console.log('Erro: ', err))
-					} else {
-						client.reply(from, mess.error.Iv, id)
-					}
-				} else {
-					client.reply(from, mess.error.St, id)
-				}
-				break
-
-
-			case 'ttp':
-				if (args.length == 0) return client.reply(from, 'Cadê a frase né?', id)
-				if (args.length >= 100) return client.reply(from, 'Seu texto é mto longo', id)
-				axios.get(`https://st4rz.herokuapp.com/api/ttp?kata=${body.slice(5)}`)
-					.then(res => {
-						client.sendImageAsSticker(from, res.data.result)
-					})
-				break
-
-			case 'fignobg':
-			case 'stickernobg':
-				if (isMedia && type == 'image') {
-
-					try {
-						var mediaData = await decryptMedia(message, uaOverride)
-						var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
-						var base64img = imageBase64
-						var outFile = './temp/img/noBg.png'
-						var result = await removeBackgroundFromImageBase64({
-							base64img,
-							apiKey: apiRemoveBg,
-							size: 'auto',
-							type: 'auto',
-							outFile
-						})
-						await fs.writeFile(outFile, result.base64img)
-						await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
-						await client.reply(from, 'Certifique-se de evitar usar isso quando não precisar,', id)
-					} catch (err) {
-						console.log(err)
-						await client.reply(from, 'Ups! Parece que a API chegou no seu limite de usos diários!\nTente novamente amanha', id)
-					}
-				} else if (quotedMsg && quotedMsg.type == 'image') {
-					try {
-						var mediaData = await decryptMedia(quotedMsg, uaOverride)
-						var imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-						var base64img = imageBase64
-						var outFile = './temp/img/noBg.png'
-						var result = await removeBackgroundFromImageBase64({
-							base64img,
-							apiKey: apiRemoveBg,
-							size: 'auto',
-							type: 'auto',
-							outFile
-						})
-						await fs.writeFile(outFile, result.base64img)
-						await client.sendImageAsSticker(from, `data:${quotedMsg.mimetype};base64,${result.base64img}`)
-						await client.reply(from, 'Certifique-se de evitar usar isso quando não precisar,', id)
-					} catch (err) {
-						console.log(err)
-						await client.reply(from, 'Ups! Parece que a API chegou no seu limite de usos diários!\nTente novamente amanha', id)
-					}
-
-				} else {
-					await client.reply(from, `Ups! preciso que me envie a imagem com a legenda ${prefix}stickernobg `, id)
-				}
-				break
-
-			case 'figg':
-			case 'stickergif':
-			case 'stikergif':
-			case 'gif':
-				if (isMedia) {
-					if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 15) {
-						var mediaData = await decryptMedia(message, uaOverride)
-						client.reply(from, mess.wait, id)
-						var filename = `./temp/stickers/stickergif.${mimetype.split('/')[1]}`
-						await fs.writeFileSync(filename, mediaData)
-						await exec(`gify ${filename} ./temp/stickers/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
-							var gif = await fs.readFileSync('./temp/stickers/stickergf.gif', {
-								encoding: "base64"
-							})
-							await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-								.catch(() => {
-									client.reply(from, 'Aff! A conversão obteve erros, talvez seja o tamanho do gif ou seu peso.', id)
-								})
-						})
-					} else {
-						client.reply(from, `Caso receba isso considere 2 motivos.\n\n1 - Isso não é um gif ou video.\n\n2 - O gif ou video tem mais de 15 segundos, passando do limite que posso converter`, id)
-					}
-				} else if (quotedMsg) {
-					if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
-						var mediaData = await decryptMedia(quotedMsg, uaOverride)
-						client.reply(from, mess.wait, id)
-						var filename = `./temp/stickers/stickergif.${quotedMsg.mimetype.split('/')[1]}`
-						await fs.writeFileSync(filename, mediaData)
-						await exec(`gify ${filename} ./temp/stickers/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
-							var gif = await fs.readFileSync('./temp/stickers/stickergf.gif', {
-								encoding: "base64"
-							})
-							await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-								.catch(() => {
-									client.reply(from, 'Aff! A conversão obteve erros, talvez seja o tamanho do gif ou seu peso.', id)
-								})
-						})
-					} else {
-						client.reply(from, `Caso receba isso considere 2 motivos.\n\n1 - Isso não é um gif ou video.\n\n2 - O gif ou video tem mais de 15 segundos, passando do limite que posso converter.`, id)
-					}
-				} else {
-					client.reply(from, mess.error.St, id)
-				}
-				break
+			// case 'figc':
+			// case 'stickercover':
+			// case 'stikercover':
+			// case 'figurinhac':
+			// case 'figurinhacover':
+			// 	if ((isMedia || isQuotedImage) && args.length === 0) {
+			// 		const encryptMedia = isQuotedImage ? quotedMsg : message
+			// 		const _mimetype = isQuotedImage ? quotedMsg.mimetype : mimetype
+			// 		const mediaData = await decryptMedia(encryptMedia, uaOverride)
+			// 		const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+			// 		client.sendImageAsSticker(from, imageBase64)
+			// 	} else if (args.length == 1) {
+			// 		const url = args[1]
+			// 		if (url.match(isUrl)) {
+			// 			await client.sendStickerfromUrl(from, url, {
+			// 				method: 'get'
+			// 			})
+			// 				.catch(err => console.log('Erro: ', err))
+			// 		} else {
+			// 			client.reply(from, mess.error.Iv, id)
+			// 		}
+			// 	} else {
+			// 		client.reply(from, mess.error.St, id)
+			// 	}
+			// 	break
 
 
-			case 'simg':
-				if (isMedia && type === 'image') {
-					const mediaData = await decryptMedia(message, uaOverride)
-					client.reply(from, 'Aguarde, leva mais de 20 segundos.\n\n *NÃO USE NOVAMENTE* até eu terminar, caso contrario, as funções todas serão bloqueadas por IP.', id)
-					const sendres = (results) => {
-						const ttile = results[0].title.replace('<span>', '').replace('</span>', '')
-						const ttscig = results[1].title.replace('<span>', '').replace('</span>', '')
-						client.reply(from, `*${ttile}*\n\n*Titulo >* ${ttscig}\n\n${results[1].url}`, id)
-						console.log(results)
-					}
-					var seaimg = './temp/img/imagesearch.jpg'
-					await fs.writeFile(seaimg, mediaData)
-					const upimg = await imgbbUploader(apiImgBB, seaimg) // Bote uma api do imgbb pras suas fotos n irem pra minha conta
-					console.log(upimg.url)
-					await sleep(10000)
-					const resimg = await imgSearch(upimg.url, sendres)
-				} else {
-					await client.reply(from, 'Amigo(a), isso somente funciona com imagens...', id)
-				}
-				break
+			// case 'ttp':
+			// 	if (args.length == 0) return client.reply(from, 'Cadê a frase né?', id)
+			// 	if (args.length >= 100) return client.reply(from, 'Seu texto é mto longo', id)
+			// 	axios.get(`https://st4rz.herokuapp.com/api/ttp?kata=${body.slice(5)}`)
+			// 		.then(res => {
+			// 			client.sendImageAsSticker(from, res.data.result)
+			// 		})
+			// 	break
+
+			// case 'fignobg':
+			// case 'stickernobg':
+			// 	if (isMedia && type == 'image') {
+
+			// 		try {
+			// 			var mediaData = await decryptMedia(message, uaOverride)
+			// 			var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
+			// 			var base64img = imageBase64
+			// 			var outFile = './temp/img/noBg.png'
+			// 			var result = await removeBackgroundFromImageBase64({
+			// 				base64img,
+			// 				apiKey: apiRemoveBg,
+			// 				size: 'auto',
+			// 				type: 'auto',
+			// 				outFile
+			// 			})
+			// 			await fs.writeFile(outFile, result.base64img)
+			// 			await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
+			// 			await client.reply(from, 'Certifique-se de evitar usar isso quando não precisar,', id)
+			// 		} catch (err) {
+			// 			console.log(err)
+			// 			await client.reply(from, 'Ups! Parece que a API chegou no seu limite de usos diários!\nTente novamente amanha', id)
+			// 		}
+			// 	} else if (quotedMsg && quotedMsg.type == 'image') {
+			// 		try {
+			// 			var mediaData = await decryptMedia(quotedMsg, uaOverride)
+			// 			var imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+			// 			var base64img = imageBase64
+			// 			var outFile = './temp/img/noBg.png'
+			// 			var result = await removeBackgroundFromImageBase64({
+			// 				base64img,
+			// 				apiKey: apiRemoveBg,
+			// 				size: 'auto',
+			// 				type: 'auto',
+			// 				outFile
+			// 			})
+			// 			await fs.writeFile(outFile, result.base64img)
+			// 			await client.sendImageAsSticker(from, `data:${quotedMsg.mimetype};base64,${result.base64img}`)
+			// 			await client.reply(from, 'Certifique-se de evitar usar isso quando não precisar,', id)
+			// 		} catch (err) {
+			// 			console.log(err)
+			// 			await client.reply(from, 'Ups! Parece que a API chegou no seu limite de usos diários!\nTente novamente amanha', id)
+			// 		}
+
+			// 	} else {
+			// 		await client.reply(from, `Ups! preciso que me envie a imagem com a legenda ${prefix}stickernobg `, id)
+			// 	}
+			// 	break
+
+			// case 'figg':
+			// case 'stickergif':
+			// case 'stikergif':
+			// case 'gif':
+			// 	if (isMedia) {
+			// 		if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 15) {
+			// 			var mediaData = await decryptMedia(message, uaOverride)
+			// 			client.reply(from, mess.wait, id)
+			// 			var filename = `./temp/stickers/stickergif.${mimetype.split('/')[1]}`
+			// 			await fs.writeFileSync(filename, mediaData)
+			// 			await exec(`gify ${filename} ./temp/stickers/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
+			// 				var gif = await fs.readFileSync('./temp/stickers/stickergf.gif', {
+			// 					encoding: "base64"
+			// 				})
+			// 				await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+			// 					.catch(() => {
+			// 						client.reply(from, 'Aff! A conversão obteve erros, talvez seja o tamanho do gif ou seu peso.', id)
+			// 					})
+			// 			})
+			// 		} else {
+			// 			client.reply(from, `Caso receba isso considere 2 motivos.\n\n1 - Isso não é um gif ou video.\n\n2 - O gif ou video tem mais de 15 segundos, passando do limite que posso converter`, id)
+			// 		}
+			// 	} else if (quotedMsg) {
+			// 		if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
+			// 			var mediaData = await decryptMedia(quotedMsg, uaOverride)
+			// 			client.reply(from, mess.wait, id)
+			// 			var filename = `./temp/stickers/stickergif.${quotedMsg.mimetype.split('/')[1]}`
+			// 			await fs.writeFileSync(filename, mediaData)
+			// 			await exec(`gify ${filename} ./temp/stickers/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
+			// 				var gif = await fs.readFileSync('./temp/stickers/stickergf.gif', {
+			// 					encoding: "base64"
+			// 				})
+			// 				await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+			// 					.catch(() => {
+			// 						client.reply(from, 'Aff! A conversão obteve erros, talvez seja o tamanho do gif ou seu peso.', id)
+			// 					})
+			// 			})
+			// 		} else {
+			// 			client.reply(from, `Caso receba isso considere 2 motivos.\n\n1 - Isso não é um gif ou video.\n\n2 - O gif ou video tem mais de 15 segundos, passando do limite que posso converter.`, id)
+			// 		}
+			// 	} else {
+			// 		client.reply(from, mess.error.St, id)
+			// 	}
+			// 	break
 
 
-			case 'upimg':
-				if (isMedia && type === 'image') {
-					const mediaData = await decryptMedia(message, uaOverride)
-					var uplimg = './temp/img/imageupl.jpg'
-					await fs.writeFile(uplimg, mediaData)
-					const sdimg = await imgbbUploader(apiImgBB, uplimg) // Bote uma api do imgbb pras suas fotos n irem pra minha conta
-					console.log(sdimg.url_viewer)
-					await client.reply(from, `*OBS!* _Essa link tem duração de 7 dias, após isso a imagem será automaticamente deletada do servidor._\n\n${sdimg.url_viewer}`, id)
-				} else {
-					await client.reply(from, 'Amigo(a), isso somente funciona com imagens.', id)
-				}
-				break
+			// case 'simg':
+			// 	if (isMedia && type === 'image') {
+			// 		const mediaData = await decryptMedia(message, uaOverride)
+			// 		client.reply(from, 'Aguarde, leva mais de 20 segundos.\n\n *NÃO USE NOVAMENTE* até eu terminar, caso contrario, as funções todas serão bloqueadas por IP.', id)
+			// 		const sendres = (results) => {
+			// 			const ttile = results[0].title.replace('<span>', '').replace('</span>', '')
+			// 			const ttscig = results[1].title.replace('<span>', '').replace('</span>', '')
+			// 			client.reply(from, `*${ttile}*\n\n*Titulo >* ${ttscig}\n\n${results[1].url}`, id)
+			// 			console.log(results)
+			// 		}
+			// 		var seaimg = './temp/img/imagesearch.jpg'
+			// 		await fs.writeFile(seaimg, mediaData)
+			// 		const upimg = await imgbbUploader(apiImgBB, seaimg) // Bote uma api do imgbb pras suas fotos n irem pra minha conta
+			// 		console.log(upimg.url)
+			// 		await sleep(10000)
+			// 		const resimg = await imgSearch(upimg.url, sendres)
+			// 	} else {
+			// 		await client.reply(from, 'Amigo(a), isso somente funciona com imagens...', id)
+			// 	}
+			// 	break
 
 
-			case 'makesticker':
-				if (args.length == 0) return client.reply(from, 'Faltou algo para usar de referência!', id)
-				const stkm = await fetch(`http://api.fdci.se/rep.php?gambar=${body.slice(7)}`)
-				const stimg = await stkm.json()
-				let stkfm = stimg[Math.floor(Math.random() * stimg.length) + 1]
-				console.log(stkfm)
-				await client.sendStickerfromUrl(from, stkfm)
-					.catch(() => {
-						client.reply(from, 'Nenhuma imagem recebida ou servidor offline, tente mais tarde.', id)
-					})
-				break
+			// case 'upimg':
+			// 	if (isMedia && type === 'image') {
+			// 		const mediaData = await decryptMedia(message, uaOverride)
+			// 		var uplimg = './temp/img/imageupl.jpg'
+			// 		await fs.writeFile(uplimg, mediaData)
+			// 		const sdimg = await imgbbUploader(apiImgBB, uplimg) // Bote uma api do imgbb pras suas fotos n irem pra minha conta
+			// 		console.log(sdimg.url_viewer)
+			// 		await client.reply(from, `*OBS!* _Essa link tem duração de 7 dias, após isso a imagem será automaticamente deletada do servidor._\n\n${sdimg.url_viewer}`, id)
+			// 	} else {
+			// 		await client.reply(from, 'Amigo(a), isso somente funciona com imagens.', id)
+			// 	}
+			// 	break
 
 
-			case 'morte':
-			case 'death':
-				if (args.length == 0) return client.reply(from, 'Coloque um nome, apenas um, nada de sobrenome ou nomes inteiros, ainda mais por sua segurança!', id)
-				const predea = await axios.get(`https://api.agify.io/?name=${args[0]}`)
-				await client.reply(from, `Pessoas com este nome "${predea.data.name}" tendem a morrer aos ${predea.data.age} anos de idade.`, id)
-				break
+			// case 'makesticker':
+			// 	if (args.length == 0) return client.reply(from, 'Faltou algo para usar de referência!', id)
+			// 	const stkm = await fetch(`http://api.fdci.se/rep.php?gambar=${body.slice(7)}`)
+			// 	const stimg = await stkm.json()
+			// 	let stkfm = stimg[Math.floor(Math.random() * stimg.length) + 1]
+			// 	console.log(stkfm)
+			// 	await client.sendStickerfromUrl(from, stkfm)
+			// 		.catch(() => {
+			// 			client.reply(from, 'Nenhuma imagem recebida ou servidor offline, tente mais tarde.', id)
+			// 		})
+			// 	break
 
 
-			case 'oculto':
-				if (!isGroupMsg) return client.reply(from, 'Apenas grupos!', id)
-				const eur = await client.getGroupMembers(groupId)
-				const surpresa = eur[Math.floor(Math.random() * eur.length)]
-				console.log(surpresa.id)
-				var xvid = ["Negoes branquelos e feministas", `${pushname} se depilando na banheira`, `${pushname} comendo meu cuzinho`, `${pushname} quer me comer o que fazer?`, "lolis nuas e safadas", "Ursinhos Mansos Peludos e excitados", "mae do adm cozida na pressao", "Buceta de 500 cm inflavel da boneca chinesa lolita company", "corno manso batendo uma pra mim com meu rosto na webcam", "tigresa vip da buceta de mel", "belle delphine dando o cuzinho no barzinho da esquina", "fazendo anal no negao", "africanos nus e chupando pau", "anal africano", "comendo a minha tia", "lgbts fazendo ahegao", "adm gostoso tirando a roupa", "gays puxando o intestino pra fora", "Gore de porno de cachorro", "anoes baixinhos do pau grandao", "Anões Gays Dotados Peludos", "anões gays dotados penetradores de botas", "Ursinhos Mansos Peludos", "Jailson Mendes", "Vendo meu Amigo Comer a Esposa", "Golden Shower"]
-				const surpresa2 = xvid[Math.floor(Math.random() * xvid.length)]
-				await client.sendTextWithMentions(from, `*EQUIPE ❌VIDEOS*\n\n_Caro usuário @${surpresa.id.replace(/@c.us/g, '')} ..._\n\n_Sou da administração do Xvideos e nós percebemos que você não entrou em sua conta por mais de 2 semanas e decidimos checar pra saber se está tudo OK com o(a) nosso(a) usuário(a) mais ativo(a)._ \n\n_Desde a última vez que você visitou nosso site, você procurou mais de centenas de vezes por_ *"${surpresa2}"* _(acreditamos ser sua favorita), viemos dizer que elas foram adicionadas e temos certeza que você irá gostar bastante._ \n_Esperamos você lá!_\n\n_Para o nosso usuário(a) favorito(a), com carinho, Equipe Xvideos._`)
-				await sleep(2000)
-				break
+			// case 'morte':
+			// case 'death':
+			// 	if (args.length == 0) return client.reply(from, 'Coloque um nome, apenas um, nada de sobrenome ou nomes inteiros, ainda mais por sua segurança!', id)
+			// 	const predea = await axios.get(`https://api.agify.io/?name=${args[0]}`)
+			// 	await client.reply(from, `Pessoas com este nome "${predea.data.name}" tendem a morrer aos ${predea.data.age} anos de idade.`, id)
+			// 	break
 
 
-			case 'gender':
-			case 'genero':
-				if (args.length == 0) return client.reply(from, 'Coloque um nome, apenas um, nada de sobrenome ou nomes inteiros, ainda mais por sua segurança!', id)
-				const seanl = await axios.get(`https://api.genderize.io/?name=${args[0]}`)
-				const gender = seanl.data.gender.replace('female', 'mulheres').replace('male', 'homens')
-				await client.reply(from, `O nome "${seanl.data.name}" é mais usado por ${gender}.`, id)
-				break
+			// case 'oculto':
+			// 	if (!isGroupMsg) return client.reply(from, 'Apenas grupos!', id)
+			// 	const eur = await client.getGroupMembers(groupId)
+			// 	const surpresa = eur[Math.floor(Math.random() * eur.length)]
+			// 	console.log(surpresa.id)
+			// 	var xvid = ["Negoes branquelos e feministas", `${pushname} se depilando na banheira`, `${pushname} comendo meu cuzinho`, `${pushname} quer me comer o que fazer?`, "lolis nuas e safadas", "Ursinhos Mansos Peludos e excitados", "mae do adm cozida na pressao", "Buceta de 500 cm inflavel da boneca chinesa lolita company", "corno manso batendo uma pra mim com meu rosto na webcam", "tigresa vip da buceta de mel", "belle delphine dando o cuzinho no barzinho da esquina", "fazendo anal no negao", "africanos nus e chupando pau", "anal africano", "comendo a minha tia", "lgbts fazendo ahegao", "adm gostoso tirando a roupa", "gays puxando o intestino pra fora", "Gore de porno de cachorro", "anoes baixinhos do pau grandao", "Anões Gays Dotados Peludos", "anões gays dotados penetradores de botas", "Ursinhos Mansos Peludos", "Jailson Mendes", "Vendo meu Amigo Comer a Esposa", "Golden Shower"]
+			// 	const surpresa2 = xvid[Math.floor(Math.random() * xvid.length)]
+			// 	await client.sendTextWithMentions(from, `*EQUIPE ❌VIDEOS*\n\n_Caro usuário @${surpresa.id.replace(/@c.us/g, '')} ..._\n\n_Sou da administração do Xvideos e nós percebemos que você não entrou em sua conta por mais de 2 semanas e decidimos checar pra saber se está tudo OK com o(a) nosso(a) usuário(a) mais ativo(a)._ \n\n_Desde a última vez que você visitou nosso site, você procurou mais de centenas de vezes por_ *"${surpresa2}"* _(acreditamos ser sua favorita), viemos dizer que elas foram adicionadas e temos certeza que você irá gostar bastante._ \n_Esperamos você lá!_\n\n_Para o nosso usuário(a) favorito(a), com carinho, Equipe Xvideos._`)
+			// 	await sleep(2000)
+			// 	break
 
 
-			case 'detector':
-				if (!isGroupMsg) return client.reply(from, 'Apenas grupos!', id)
-				await client.reply(from, 'Calculando foto dos participantes do grupo...', id)
-				await sleep(3000)
-				const eu = await client.getGroupMembers(groupId)
-				const gostosa = eu[Math.floor(Math.random() * eu.length)]
-				console.log(gostosa.id)
-				await client.sendTextWithMentions(from, `*ＤＥＴＥＣＴＯＲ   ＤＥ  ＧＯＳＴＯＳＡＳ👩‍⚕️*\n\n*pi pi pi pi*  \n*pipipipi🚨🚨🚨pipipipi🚨🚨🚨pipipipi🚨🚨🚨pipi*\n\n@${gostosa.id.replace(/@c.us/g, '')} *PARADA(O) AÍ🖐*\n\n*VOCÊ ACABA DE RECEBER DUAS MULTAS*\n\n*1 por não dar bom dia,boa tarde,boa noite e outra por ser muito*\n\n*gostosa(o)*\n\n*valor da multa:*\n*FOTO DA TETINHA NO PV kkkkk*`)
-				await sleep(2000)
-				break
+			// case 'gender':
+			// case 'genero':
+			// 	if (args.length == 0) return client.reply(from, 'Coloque um nome, apenas um, nada de sobrenome ou nomes inteiros, ainda mais por sua segurança!', id)
+			// 	const seanl = await axios.get(`https://api.genderize.io/?name=${args[0]}`)
+			// 	const gender = seanl.data.gender.replace('female', 'mulheres').replace('male', 'homens')
+			// 	await client.reply(from, `O nome "${seanl.data.name}" é mais usado por ${gender}.`, id)
+			// 	break
+
+
+			// case 'detector':
+			// 	if (!isGroupMsg) return client.reply(from, 'Apenas grupos!', id)
+			// 	await client.reply(from, 'Calculando foto dos participantes do grupo...', id)
+			// 	await sleep(3000)
+			// 	const eu = await client.getGroupMembers(groupId)
+			// 	const gostosa = eu[Math.floor(Math.random() * eu.length)]
+			// 	console.log(gostosa.id)
+			// 	await client.sendTextWithMentions(from, `*ＤＥＴＥＣＴＯＲ   ＤＥ  ＧＯＳＴＯＳＡＳ👩‍⚕️*\n\n*pi pi pi pi*  \n*pipipipi🚨🚨🚨pipipipi🚨🚨🚨pipipipi🚨🚨🚨pipi*\n\n@${gostosa.id.replace(/@c.us/g, '')} *PARADA(O) AÍ🖐*\n\n*VOCÊ ACABA DE RECEBER DUAS MULTAS*\n\n*1 por não dar bom dia,boa tarde,boa noite e outra por ser muito*\n\n*gostosa(o)*\n\n*valor da multa:*\n*FOTO DA TETINHA NO PV kkkkk*`)
+			// 	await sleep(2000)
+			// 	break
 
 
 
-			case 'math':
-				if (args.length == 0) return client.reply(from, 'Você não especificou uma conta matematica.', id)
-				const mtk = body.slice(6)
-				if (typeof math.evaluate(mtk) !== "number") {
-					client.reply(from, `Você definiu mesmo uma conta? Isso não parece uma.`, id)
-				} else {
-					client.reply(from, `_A equação:_\n\n*${mtk}*\n\n_tem resultado de:_\n\n*${math.evaluate(mtk)}*`, id)
-				}
-				break
+			// case 'math':
+			// 	if (args.length == 0) return client.reply(from, 'Você não especificou uma conta matematica.', id)
+			// 	const mtk = body.slice(6)
+			// 	if (typeof math.evaluate(mtk) !== "number") {
+			// 		client.reply(from, `Você definiu mesmo uma conta? Isso não parece uma.`, id)
+			// 	} else {
+			// 		client.reply(from, `_A equação:_\n\n*${mtk}*\n\n_tem resultado de:_\n\n*${math.evaluate(mtk)}*`, id)
+			// 	}
+			// 	break
 
 
-			case 'inverter':
-				if (args.length == 0) return client.reply(from, 'Você não especificou uma frase para ser invertida.', id)
-				const inver = body.slice(10).split('').reverse().join('')
-				await client.reply(from, inver, id)
-				break
+			// case 'inverter':
+			// 	if (args.length == 0) return client.reply(from, 'Você não especificou uma frase para ser invertida.', id)
+			// 	const inver = body.slice(10).split('').reverse().join('')
+			// 	await client.reply(from, inver, id)
+			// 	break
 
 
-			case 'contar':
-				if (args.length == 0) return client.reply(from, 'Isso possui 0 letras, afinal, não há texto.', id)
-				const count = body.slice(8).length
-				await client.reply(from, `O texto possui ${count} letras.`, id)
-				break
+			// case 'contar':
+			// 	if (args.length == 0) return client.reply(from, 'Isso possui 0 letras, afinal, não há texto.', id)
+			// 	const count = body.slice(8).length
+			// 	await client.reply(from, `O texto possui ${count} letras.`, id)
+			// 	break
 
 
-			case 'giphy':
-				gark = body.trim().split(/ +/).slice(1)
-				const link = gark.length !== 0 ? gark[0] : ''
-				if (gark.length !== 1) return client.reply(from, `Ownn, você esqueceu de inserir o link?`, id)
-				const isGiphy = link.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'))
-				const isMediaGiphy = link.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'))
-				if (isGiphy) {
-					const getGiphyCode = link.match(new RegExp(/(\/|\-)(?:.(?!(\/|\-)))+$/, 'gi'))
-					if (!getGiphyCode) {
-						return client.reply(from, 'Que peninha! O código de download dele está distante demais, mas talvez se você tentar novamente *apenas mais 1 vez...*', id)
-					}
-					const giphyCode = getGiphyCode[0].replace(/[-\/]/gi, '')
-					const smallGifUrl = 'https://media.giphy.com/media/' + giphyCode + '/giphy-downsized.gif'
-					client.sendGiphyAsSticker(from, smallGifUrl)
-						.catch((err) => client.reply(from, `Um passarinho me disse que esse erro está relacionado ao envio do sticker...`, id))
-				} else if (isMediaGiphy) {
-					const gifUrl = link.match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'))
-					if (!gifUrl) {
-						return client.reply(from, 'Que peninha! O código de download dele está distante demais, mas talvez se você tentar novamente *apenas mais 1 vez...*', id)
-					}
-					const smallGifUrl = link.replace(gifUrl[0], 'giphy-downsized.gif')
-					client.sendGiphyAsSticker(from, smallGifUrl)
-						.catch(() => {
-							client.reply(from, `Um passarinho me disse que esse erro está relacionado ao envio do sticker...`, id)
-						})
-				} else {
-					await client.reply(from, 'Desculpa, mas eu só posso aceitar links do giphy.', id)
-				}
-				break
+			// case 'giphy':
+			// 	gark = body.trim().split(/ +/).slice(1)
+			// 	const link = gark.length !== 0 ? gark[0] : ''
+			// 	if (gark.length !== 1) return client.reply(from, `Ownn, você esqueceu de inserir o link?`, id)
+			// 	const isGiphy = link.match(new RegExp(/https?:\/\/(www\.)?giphy.com/, 'gi'))
+			// 	const isMediaGiphy = link.match(new RegExp(/https?:\/\/media.giphy.com\/media/, 'gi'))
+			// 	if (isGiphy) {
+			// 		const getGiphyCode = link.match(new RegExp(/(\/|\-)(?:.(?!(\/|\-)))+$/, 'gi'))
+			// 		if (!getGiphyCode) {
+			// 			return client.reply(from, 'Que peninha! O código de download dele está distante demais, mas talvez se você tentar novamente *apenas mais 1 vez...*', id)
+			// 		}
+			// 		const giphyCode = getGiphyCode[0].replace(/[-\/]/gi, '')
+			// 		const smallGifUrl = 'https://media.giphy.com/media/' + giphyCode + '/giphy-downsized.gif'
+			// 		client.sendGiphyAsSticker(from, smallGifUrl)
+			// 			.catch((err) => client.reply(from, `Um passarinho me disse que esse erro está relacionado ao envio do sticker...`, id))
+			// 	} else if (isMediaGiphy) {
+			// 		const gifUrl = link.match(new RegExp(/(giphy|source).(gif|mp4)/, 'gi'))
+			// 		if (!gifUrl) {
+			// 			return client.reply(from, 'Que peninha! O código de download dele está distante demais, mas talvez se você tentar novamente *apenas mais 1 vez...*', id)
+			// 		}
+			// 		const smallGifUrl = link.replace(gifUrl[0], 'giphy-downsized.gif')
+			// 		client.sendGiphyAsSticker(from, smallGifUrl)
+			// 			.catch(() => {
+			// 				client.reply(from, `Um passarinho me disse que esse erro está relacionado ao envio do sticker...`, id)
+			// 			})
+			// 	} else {
+			// 		await client.reply(from, 'Desculpa, mas eu só posso aceitar links do giphy.', id)
+			// 	}
+			// 	break
 
 
-			case 'msg':
-				if (args.length == 0) return client.reply(from, 'Você esqueceu de inserir uma mensagem... e.e', id)
-				await client.sendText(from, `${body.slice(5)}`)
-				break
+			// case 'msg':
+			// 	if (args.length == 0) return client.reply(from, 'Você esqueceu de inserir uma mensagem... e.e', id)
+			// 	await client.sendText(from, `${body.slice(5)}`)
+			// 	break
 
 
-			case 'id':
-				if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
-				client.reply(from, `A ID desse grupo é ${groupId}`, id)
-				break
+			// case 'id':
+			// 	if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
+			// 	client.reply(from, `A ID desse grupo é ${groupId}`, id)
+			// 	break
 
-			case 'fake':
-				if (isGroupMsg && isGroupAdmins) {
-					if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
-					if (args[0] == 'on') {
-						faki.push(chatId)
-						fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
-						client.reply(from, 'Anti-Fakes habilitado.', id)
-					} else if (args[0] == 'off') {
-						let yath = faki.indexOf(chatId)
-						faki.splice(yath, 1)
-						fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
-						client.reply(from, 'Anti-fakes desabilitado.', id)
-					}
-				} else if (isGroupMsg && isOwner) {
-					if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
-					if (args[0] == 'on') {
-						faki.push(chatId)
-						fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
-						client.reply(from, 'Anti-Fakes habilitado.', id)
-					} else if (args[0] == 'off') {
-						let yath = faki.indexOf(chatId)
-						faki.splice(yath, 1)
-						fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
-						client.reply(from, 'Anti-fakes desabilitado.', id)
-					}
-				} else {
-					client.reply(from, mess.error.Ga, id)
-				}
-				break
+			// case 'fake':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
+			// 		if (args[0] == 'on') {
+			// 			faki.push(chatId)
+			// 			fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
+			// 			client.reply(from, 'Anti-Fakes habilitado.', id)
+			// 		} else if (args[0] == 'off') {
+			// 			let yath = faki.indexOf(chatId)
+			// 			faki.splice(yath, 1)
+			// 			fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
+			// 			client.reply(from, 'Anti-fakes desabilitado.', id)
+			// 		}
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
+			// 		if (args[0] == 'on') {
+			// 			faki.push(chatId)
+			// 			fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
+			// 			client.reply(from, 'Anti-Fakes habilitado.', id)
+			// 		} else if (args[0] == 'off') {
+			// 			let yath = faki.indexOf(chatId)
+			// 			faki.splice(yath, 1)
+			// 			fs.writeFileSync('./database/group/fake.json', JSON.stringify(faki))
+			// 			client.reply(from, 'Anti-fakes desabilitado.', id)
+			// 		}
+			// 	} else {
+			// 		client.reply(from, mess.error.Ga, id)
+			// 	}
+			// 	break
 
-			case 'blacklist':
-				if (isGroupMsg && isGroupAdmins) {
-					if (args.length !== 1) return client.reply(from, 'Defina entre on e off!', id)
-					if (args[0] == 'on') {
-						bklist.push(chatId)
-						fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
-						client.reply(from, `Anti números acionado.\nUse ${prefix}bklist (Número) para adicionar números.`, id)
-					} else if (args[0] == 'off') {
-						let exclu = bklist.indexOf(chatId)
-						bklist.splice(exclu, 1)
-						fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
-						client.reply(from, 'Anti números offline.', id)
-					}
-				} else if (isGroupMsg && isOwner) {
-					if (args.length !== 1) return client.reply(from, 'Defina entre on e off!', id)
-					if (args[0] == 'on') {
-						bklist.push(chatId)
-						fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
-						client.reply(from, `Anti números acionado.\nUse ${prefix}bklist (Número) para adicionar números.`, id)
-					} else if (args[0] == 'off') {
-						let exclu = bklist.indexOf(chatId)
-						bklist.splice(exclu, 1)
-						fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
-						client.reply(from, 'Anti números offline.', id)
-					}
-				} else {
-					client.reply(from, mess.error.Ga, id)
-				}
-				break
-
-
-			case 'bklist':
-				if (isGroupMsg && isGroupAdmins) {
-					if (args.length == 0) return client.reply(from, 'Defina o número.', id)
-					const bkls = body.slice(8) + '@c.us'
-					atbk.push(bkls)
-					fs.writeFileSync('./database/group/anti.json', JSON.stringify(atbk))
-					await client.reply(from, 'Número adicionado a black-list', id)
-				} else if (isGroupMsg && isOwner) {
-					if (args.length == 0) return client.reply(from, 'Defina o número.', id)
-					const bkls = body.slice(8) + '@c.us'
-					atbk.push(bkls)
-					fs.writeFileSync('./database/group/anti.json', JSON.stringify(atbk))
-					await client.reply(from, 'Número adicionado a black-list', id)
-				} else {
-					client.reply(from, mess.error.Ga, id)
-				}
-				break
+			// case 'blacklist':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		if (args.length !== 1) return client.reply(from, 'Defina entre on e off!', id)
+			// 		if (args[0] == 'on') {
+			// 			bklist.push(chatId)
+			// 			fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
+			// 			client.reply(from, `Anti números acionado.\nUse ${prefix}bklist (Número) para adicionar números.`, id)
+			// 		} else if (args[0] == 'off') {
+			// 			let exclu = bklist.indexOf(chatId)
+			// 			bklist.splice(exclu, 1)
+			// 			fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
+			// 			client.reply(from, 'Anti números offline.', id)
+			// 		}
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		if (args.length !== 1) return client.reply(from, 'Defina entre on e off!', id)
+			// 		if (args[0] == 'on') {
+			// 			bklist.push(chatId)
+			// 			fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
+			// 			client.reply(from, `Anti números acionado.\nUse ${prefix}bklist (Número) para adicionar números.`, id)
+			// 		} else if (args[0] == 'off') {
+			// 			let exclu = bklist.indexOf(chatId)
+			// 			bklist.splice(exclu, 1)
+			// 			fs.writeFileSync('./database/group/blacklist.json', JSON.stringify(bklist))
+			// 			client.reply(from, 'Anti números offline.', id)
+			// 		}
+			// 	} else {
+			// 		client.reply(from, mess.error.Ga, id)
+			// 	}
+			// 	break
 
 
-			case 'onlyadms':
-				onar = body.trim().split(/ +/).slice(1)
-				if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
-				if (!isGroupAdmins) return client.reply(from, mess.error.Ga, id)
-				if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
-				if (onar.length !== 1) return client.reply(from, `Você esqueceu de colocar se quer ativado [On], ou desativado [Off].`, id)
-				if (onar[0] == 'on') {
-					client.setGroupToAdminsOnly(groupId, true).then(() => client.sendText(from, 'Aqui está a prova de poder dos ademiros!\nO silenciador :O'))
-				} else if (onar[0] == 'off') {
-					client.setGroupToAdminsOnly(groupId, false).then(() => client.sendText(from, 'E os membros comuns podem voltar a badernar! e.e'))
-				} else {
-					client.reply(from, `Você esqueceu de colocar se quer ativado [On], ou desativado [Off].`, id)
-				}
-				break
+			// case 'bklist':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		if (args.length == 0) return client.reply(from, 'Defina o número.', id)
+			// 		const bkls = body.slice(8) + '@c.us'
+			// 		atbk.push(bkls)
+			// 		fs.writeFileSync('./database/group/anti.json', JSON.stringify(atbk))
+			// 		await client.reply(from, 'Número adicionado a black-list', id)
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		if (args.length == 0) return client.reply(from, 'Defina o número.', id)
+			// 		const bkls = body.slice(8) + '@c.us'
+			// 		atbk.push(bkls)
+			// 		fs.writeFileSync('./database/group/anti.json', JSON.stringify(atbk))
+			// 		await client.reply(from, 'Número adicionado a black-list', id)
+			// 	} else {
+			// 		client.reply(from, mess.error.Ga, id)
+			// 	}
+			// 	break
 
 
-			case 'revoke':
-				if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
-				if (!isGroupAdmins) return client.reply(from, mess.error.Ga, id)
-				if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
-				await client.revokeGroupInviteLink(groupId).then(() => client.reply(from, 'Prontinho, sua ordem foi realizada! e.e', id))
-				break
-
-			case 'setimage':
-				if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
-				if (!isGroupAdmins) return client.reply(from, mess.error.Ga, id)
-				if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
-				if (isMedia && type == 'image' || isQuotedImage) {
-					const dataMedia = isQuotedImage ? quotedMsg : message
-					const _mimetype = dataMedia.mimetype
-					const mediaData = await decryptMedia(dataMedia, uaOverride)
-					const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
-					const picgp = await client.getProfilePicFromServer(chat.id)
-					if (picgp == undefined) {
-						var backup = errorurl
-					} else {
-						var backup = picgp
-					}
-					await client.sendFileFromUrl(from, backup, 'group.png', 'Para caso você mude de ideia...', id)
-					await client.setGroupIcon(groupId, imageBase64)
-				} else if (args.length == 1) {
-					if (!isUrl(url)) {
-						await client.reply(from, 'Tem certeza que isso é um link apenas para a foto?', id)
-					}
-					const picgpo = await client.getProfilePicFromServer(chat.id)
-					if (picgpo == undefined) {
-						var back = errorurl
-					} else {
-						var back = picgpo
-					}
-					await client.sendFileFromUrl(from, back, 'group.png', 'Caso você mude de ideia...', id)
-					client.setGroupIconByUrl(groupId, url).then((r) => (!r && r !== undefined) ?
-						client.reply(from, 'É o que eu pensava, não existem fotos nesse link, ou o link contem fotos demais.', id) :
-						client.reply(from, 'Isso! Agora o grupo está de cara nova haha!', id))
-				} else {
-					client.reply(from, `Acho que você esta usando errado em!`)
-				}
-				break
+			// case 'onlyadms':
+			// 	onar = body.trim().split(/ +/).slice(1)
+			// 	if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
+			// 	if (!isGroupAdmins) return client.reply(from, mess.error.Ga, id)
+			// 	if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
+			// 	if (onar.length !== 1) return client.reply(from, `Você esqueceu de colocar se quer ativado [On], ou desativado [Off].`, id)
+			// 	if (onar[0] == 'on') {
+			// 		client.setGroupToAdminsOnly(groupId, true).then(() => client.sendText(from, 'Aqui está a prova de poder dos ademiros!\nO silenciador :O'))
+			// 	} else if (onar[0] == 'off') {
+			// 		client.setGroupToAdminsOnly(groupId, false).then(() => client.sendText(from, 'E os membros comuns podem voltar a badernar! e.e'))
+			// 	} else {
+			// 		client.reply(from, `Você esqueceu de colocar se quer ativado [On], ou desativado [Off].`, id)
+			// 	}
+			// 	break
 
 
-			case 'img':
-				if (quotedMsg && quotedMsg.type == 'sticker') {
-					const mediaData = await decryptMedia(quotedMsg)
-					client.reply(from, `Só esperar, pode levar um tempinho...`, id)
-					const stickerImage = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-					await client.sendFile(from, stickerImage, '', 'Aproveite, aqui está sua foto! :D', id)
-				} else if (!quotedMsg) return client.reply(from, `Desculpe, isso é somente para stickers...`, id)
-				break
+			// case 'revoke':
+			// 	if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
+			// 	if (!isGroupAdmins) return client.reply(from, mess.error.Ga, id)
+			// 	if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
+			// 	await client.revokeGroupInviteLink(groupId).then(() => client.reply(from, 'Prontinho, sua ordem foi realizada! e.e', id))
+			// 	break
+
+			// case 'setimage':
+			// 	if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
+			// 	if (!isGroupAdmins) return client.reply(from, mess.error.Ga, id)
+			// 	if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
+			// 	if (isMedia && type == 'image' || isQuotedImage) {
+			// 		const dataMedia = isQuotedImage ? quotedMsg : message
+			// 		const _mimetype = dataMedia.mimetype
+			// 		const mediaData = await decryptMedia(dataMedia, uaOverride)
+			// 		const imageBase64 = `data:${_mimetype};base64,${mediaData.toString('base64')}`
+			// 		const picgp = await client.getProfilePicFromServer(chat.id)
+			// 		if (picgp == undefined) {
+			// 			var backup = errorurl
+			// 		} else {
+			// 			var backup = picgp
+			// 		}
+			// 		await client.sendFileFromUrl(from, backup, 'group.png', 'Para caso você mude de ideia...', id)
+			// 		await client.setGroupIcon(groupId, imageBase64)
+			// 	} else if (args.length == 1) {
+			// 		if (!isUrl(url)) {
+			// 			await client.reply(from, 'Tem certeza que isso é um link apenas para a foto?', id)
+			// 		}
+			// 		const picgpo = await client.getProfilePicFromServer(chat.id)
+			// 		if (picgpo == undefined) {
+			// 			var back = errorurl
+			// 		} else {
+			// 			var back = picgpo
+			// 		}
+			// 		await client.sendFileFromUrl(from, back, 'group.png', 'Caso você mude de ideia...', id)
+			// 		client.setGroupIconByUrl(groupId, url).then((r) => (!r && r !== undefined) ?
+			// 			client.reply(from, 'É o que eu pensava, não existem fotos nesse link, ou o link contem fotos demais.', id) :
+			// 			client.reply(from, 'Isso! Agora o grupo está de cara nova haha!', id))
+			// 	} else {
+			// 		client.reply(from, `Acho que você esta usando errado em!`)
+			// 	}
+			// 	break
+
+
+			// case 'img':
+			// 	if (quotedMsg && quotedMsg.type == 'sticker') {
+			// 		const mediaData = await decryptMedia(quotedMsg)
+			// 		client.reply(from, `Só esperar, pode levar um tempinho...`, id)
+			// 		const stickerImage = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
+			// 		await client.sendFile(from, stickerImage, '', 'Aproveite, aqui está sua foto! :D', id)
+			// 	} else if (!quotedMsg) return client.reply(from, `Desculpe, isso é somente para stickers...`, id)
+			// 	break
 
 
 			case 'randomanime':
@@ -726,52 +729,52 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'neko':
-				const nekol = Math.floor(Math.random() * 6) + 1
-				if (nekol == 1) {
-					const neko1 = await get.get('http://mhankbarbars.herokuapp.com/api/nekonime').json()
-					await client.sendFileFromUrl(from, neko1.result, ``, `Que fofa...`, id)
-				} else if (nekol == 2) {
-					const neko2 = await axios.get(`https://nekos.life/api/v2/img/neko`)
-					await client.sendFileFromUrl(from, neko2.data.url, ``, `Nekooo`, id)
-				} else if (nekol == 3) {
-					const neko3 = await axios.get(`https://nekos.life/api/v2/img/ngif`)
-					await client.sendFileFromUrl(from, neko3.data.url, ``, `Nekooo`, id)
-				} else if (nekol == 4) {
-					const neko4 = await axios.get(`https://nekos.life/api/v2/img/fox_girl`)
-					await client.sendFileFromUrl(from, neko4.data.url, ``, `Nekooo`, id)
-				} else if (nekol == 5) {
-					const neko5 = await axios.get(`https://nekos.life/api/v2/img/kemonomimi`)
-					await client.sendFileFromUrl(from, neko5.data.url, ``, `Nekoooo chann`, id)
-				} else if (nekol == 6) {
-					const neko6 = await axios.get(`https://arugaz.herokuapp.com/api/nekonime`)
-					await client.sendFileFromUrl(from, neko6.data.result, ``, `Nekoooo chann`, id)
-				}
-				break
+			// case 'neko':
+			// 	const nekol = Math.floor(Math.random() * 6) + 1
+			// 	if (nekol == 1) {
+			// 		const neko1 = await get.get('http://mhankbarbars.herokuapp.com/api/nekonime').json()
+			// 		await client.sendFileFromUrl(from, neko1.result, ``, `Que fofa...`, id)
+			// 	} else if (nekol == 2) {
+			// 		const neko2 = await axios.get(`https://nekos.life/api/v2/img/neko`)
+			// 		await client.sendFileFromUrl(from, neko2.data.url, ``, `Nekooo`, id)
+			// 	} else if (nekol == 3) {
+			// 		const neko3 = await axios.get(`https://nekos.life/api/v2/img/ngif`)
+			// 		await client.sendFileFromUrl(from, neko3.data.url, ``, `Nekooo`, id)
+			// 	} else if (nekol == 4) {
+			// 		const neko4 = await axios.get(`https://nekos.life/api/v2/img/fox_girl`)
+			// 		await client.sendFileFromUrl(from, neko4.data.url, ``, `Nekooo`, id)
+			// 	} else if (nekol == 5) {
+			// 		const neko5 = await axios.get(`https://nekos.life/api/v2/img/kemonomimi`)
+			// 		await client.sendFileFromUrl(from, neko5.data.url, ``, `Nekoooo chann`, id)
+			// 	} else if (nekol == 6) {
+			// 		const neko6 = await axios.get(`https://arugaz.herokuapp.com/api/nekonime`)
+			// 		await client.sendFileFromUrl(from, neko6.data.result, ``, `Nekoooo chann`, id)
+			// 	}
+			// 	break
 
 
-			case 'image':
-				if (args.length == 0) return client.reply(from, 'Faltou um nome!', id)
-				const linp = await fetch(`http://api.fdci.se/rep.php?gambar=${body.slice(7)}`)
-				const pint = await linp.json()
-				let erest = pint[Math.floor(Math.random() * pint.length) + 1]
-				console.log(erest)
-				await client.sendFileFromUrl(from, erest, '', 'Havia muitas mas espero que curta a imagem que eu escolhi ^^!', id)
-					.catch(() => {
-						client.reply(from, 'Nenhuma imagem recebida ou servidor offline, tente mais tarde.', id)
-					})
-				break
+			// case 'image':
+			// 	if (args.length == 0) return client.reply(from, 'Faltou um nome!', id)
+			// 	const linp = await fetch(`http://api.fdci.se/rep.php?gambar=${body.slice(7)}`)
+			// 	const pint = await linp.json()
+			// 	let erest = pint[Math.floor(Math.random() * pint.length) + 1]
+			// 	console.log(erest)
+			// 	await client.sendFileFromUrl(from, erest, '', 'Havia muitas mas espero que curta a imagem que eu escolhi ^^!', id)
+			// 		.catch(() => {
+			// 			client.reply(from, 'Nenhuma imagem recebida ou servidor offline, tente mais tarde.', id)
+			// 		})
+			// 	break
 
 
-			case 'yaoi':
-				const yam = await fetch(`http://api.fdci.se/rep.php?gambar=yaoi`)
-				const yaoi = await yam.json()
-				let flyaoi = yaoi[Math.floor(Math.random() * yaoi.length) + 1]
-				await client.sendFileFromUrl(from, flyaoi, '', 'Tururu...', id)
-					.catch(() => {
-						client.reply(from, 'Nenhuma imagem recebida ou servidor offline, tente mais tarde.', id)
-					})
-				break
+			// case 'yaoi':
+			// 	const yam = await fetch(`http://api.fdci.se/rep.php?gambar=yaoi`)
+			// 	const yaoi = await yam.json()
+			// 	let flyaoi = yaoi[Math.floor(Math.random() * yaoi.length) + 1]
+			// 	await client.sendFileFromUrl(from, flyaoi, '', 'Tururu...', id)
+			// 		.catch(() => {
+			// 			client.reply(from, 'Nenhuma imagem recebida ou servidor offline, tente mais tarde.', id)
+			// 		})
+			// 	break
 
 
 			case 'life':
@@ -849,100 +852,100 @@ module.exports = msgHandler = async (client, message) => {
 				break;
 
 
-			case 'mp3':
-				if (args.length == 0) return client.reply(from, `Para baixar músicas do youtube\nUso: ${prefix}ytmp3 [link_yt]`, id)
-				if (!ytdl.validateURL(args[0])) return client.reply(from, `O url não é válido`, id) //  Verifica se é um url valido do youtube
-				var ytmp3ID = args[0].replace('https://m.youtu.be/', '').replace('https://youtu.be/', '').replace('https://www.youtube.com/', '').replace('watch?v=', '') // Remove o link e pega só o ID
+			// case 'mp3':
+			// 	if (args.length == 0) return client.reply(from, `Para baixar músicas do youtube\nUso: ${prefix}ytmp3 [link_yt]`, id)
+			// 	if (!ytdl.validateURL(args[0])) return client.reply(from, `O url não é válido`, id) //  Verifica se é um url valido do youtube
+			// 	var ytmp3ID = args[0].replace('https://m.youtu.be/', '').replace('https://youtu.be/', '').replace('https://www.youtube.com/', '').replace('watch?v=', '') // Remove o link e pega só o ID
 
-				const ytmp3info = await ytdl.getInfo(`https://www.youtube.com/watch?v=${ytmp3ID}`, {
-					quality: 'highestaudio'
-				});
+			// 	const ytmp3info = await ytdl.getInfo(`https://www.youtube.com/watch?v=${ytmp3ID}`, {
+			// 		quality: 'highestaudio'
+			// 	});
 
-				let stream = ytdl(ytmp3ID, {
-					quality: 'highestaudio'
-				});
+			// 	let stream = ytdl(ytmp3ID, {
+			// 		quality: 'highestaudio'
+			// 	});
 
-				let songinfo = {
-					title: ytmp3info.videoDetails.title,
-					url: ytmp3info.videoDetails.video_url,
-					thumbnail: ytmp3info.videoDetails.thumbnails[5].url,
-					lengthSeconds: ytmp3info.videoDetails.lengthSeconds,
-					authorName: ytmp3info.videoDetails.author.name,
-					videoId: ytmp3info.videoDetails.videoId,
-					isPrivate: ytmp3info.videoDetails.isPrivate,
-				}
+			// 	let songinfo = {
+			// 		title: ytmp3info.videoDetails.title,
+			// 		url: ytmp3info.videoDetails.video_url,
+			// 		thumbnail: ytmp3info.videoDetails.thumbnails[5].url,
+			// 		lengthSeconds: ytmp3info.videoDetails.lengthSeconds,
+			// 		authorName: ytmp3info.videoDetails.author.name,
+			// 		videoId: ytmp3info.videoDetails.videoId,
+			// 		isPrivate: ytmp3info.videoDetails.isPrivate,
+			// 	}
 
-				//console.log(songinfo);
-				let testSize = (((songinfo.lengthSeconds * 128000) / 8) / 1024) / 1024
-				console.log(`Estimativa de tamanho do vídeo: ${testSize} MB`);
+			// 	//console.log(songinfo);
+			// 	let testSize = (((songinfo.lengthSeconds * 128000) / 8) / 1024) / 1024
+			// 	console.log(`Estimativa de tamanho do vídeo: ${testSize} MB`);
 
-				if (testSize >= 15) {
-					return client.reply(from, `O arquivo é muito grande ✋😥`, id)
-				}
+			// 	if (testSize >= 15) {
+			// 		return client.reply(from, `O arquivo é muito grande ✋😥`, id)
+			// 	}
 
-				if (songinfo.lengthSeconds > 900) {
-					return client.reply(from, `O vídeo é longo demais ✋😥`, id)
-				}
+			// 	if (songinfo.lengthSeconds > 900) {
+			// 		return client.reply(from, `O vídeo é longo demais ✋😥`, id)
+			// 	}
 
-				client.reply(from, `Preparando *${songinfo.title}*\nAguarde...`, id)
+			// 	client.reply(from, `Preparando *${songinfo.title}*\nAguarde...`, id)
 
-				ffmpeg(stream)
-					.audioBitrate(128)
-					.save(`./temp/yt/${songinfo.videoId}.mp3`)
-					.on('end', () => {
-						var stats = fs.statSync(`./temp/yt/${songinfo.videoId}.mp3`)
-						let realSize = stats.size / (1024 * 1024);
-						console.log(`Tamanho real: ${realSize} MB`);
-						if (realSize <= 15) {
-							client.sendFile(from, `./temp/yt/${songinfo.videoId}.mp3`, `${songinfo.videoId}.mp3`, null, id).then(f => {
-								try {
-									fs.unlinkSync(`./temp/yt/${songinfo.videoId}.mp3`);
-									console.log(`successfully deleted ${songinfo.videoId}.mp3`);
-								} catch (err) {
-									// handle the error
-									console.log(err);
-								}
-							})
-						} else {
-							return client.reply(from, `O arquivo é muito grande ✋😥`, id)
-						}
-					});
-				break
+			// 	ffmpeg(stream)
+			// 		.audioBitrate(128)
+			// 		.save(`./temp/yt/${songinfo.videoId}.mp3`)
+			// 		.on('end', () => {
+			// 			var stats = fs.statSync(`./temp/yt/${songinfo.videoId}.mp3`)
+			// 			let realSize = stats.size / (1024 * 1024);
+			// 			console.log(`Tamanho real: ${realSize} MB`);
+			// 			if (realSize <= 15) {
+			// 				client.sendFile(from, `./temp/yt/${songinfo.videoId}.mp3`, `${songinfo.videoId}.mp3`, null, id).then(f => {
+			// 					try {
+			// 						fs.unlinkSync(`./temp/yt/${songinfo.videoId}.mp3`);
+			// 						console.log(`successfully deleted ${songinfo.videoId}.mp3`);
+			// 					} catch (err) {
+			// 						// handle the error
+			// 						console.log(err);
+			// 					}
+			// 				})
+			// 			} else {
+			// 				return client.reply(from, `O arquivo é muito grande ✋😥`, id)
+			// 			}
+			// 		});
+			// 	break
 
 
-			case 'mp4':
-				if (args.length == 0) return client.reply(from, `Baixe vídeos do youtube\nUso: ${prefix}ytmp4 [link_yt]`, id)
-				if (!ytdl.validateURL(args[0])) return client.reply(from, `O url não é válido`, id) //  Verifica se é um url valido do youtube
-				const video = await ytdl.getInfo(args[0])
-				var ytmp3ID = args[0].replace('https://m.youtu.be/', '').replace('https://youtu.be/', '').replace('https://www.youtube.com/', '').replace('watch?v=', '') // Remove o link e pega só o ID
+			// case 'mp4':
+			// 	if (args.length == 0) return client.reply(from, `Baixe vídeos do youtube\nUso: ${prefix}ytmp4 [link_yt]`, id)
+			// 	if (!ytdl.validateURL(args[0])) return client.reply(from, `O url não é válido`, id) //  Verifica se é um url valido do youtube
+			// 	const video = await ytdl.getInfo(args[0])
+			// 	var ytmp3ID = args[0].replace('https://m.youtu.be/', '').replace('https://youtu.be/', '').replace('https://www.youtube.com/', '').replace('watch?v=', '') // Remove o link e pega só o ID
 
-				const videoSort = video.formats.sort(
-					(a, b) => parseInt(b.height) - parseInt(a.height)
-				);
+			// 	const videoSort = video.formats.sort(
+			// 		(a, b) => parseInt(b.height) - parseInt(a.height)
+			// 	);
 
-				const videoData = videoSort.filter(
-					(format) =>
-						format.container === 'mp4' &&
-						format.hasAudio === true &&
-						format.hasVideo === true
-				)[0];
+			// 	const videoData = videoSort.filter(
+			// 		(format) =>
+			// 			format.container === 'mp4' &&
+			// 			format.hasAudio === true &&
+			// 			format.hasVideo === true
+			// 	)[0];
 
-				const shortUrl = await urlShortener(videoData.url);
-				console.log('Video link: ' + shortUrl);
+			// 	const shortUrl = await urlShortener(videoData.url);
+			// 	console.log('Video link: ' + shortUrl);
 
-				if (videoData.contentLength != undefined) {
-					console.log(videoData.contentLength);
-					if (videoData.contentLength >= 15000000) {
-						return client.reply(from, `Desculpe, para evitar banimentos do WhatsApp, o limite de envio de videos é de 16MB, e esse possui ${mp4impo.replace('    ', ' ')}.\n\nPorém vou deixar o link para você baixar aqui: ${shortUrl}`, id)
-					} else {
-						client.reply(from, `Preparando *${video.videoDetails.title}*\nAguarde...`, id)
-						await client.sendFileFromUrl(message.chatId, videoData.url, 'youtube.mp4', `Link de download: ${shortUrl}`
-						);
-					}
-				} else {
-					await client.reply(message.chatId, `*${video.videoDetails.title}*\n\nTalvez o vídeo era muito grande, ou eu não consegui avaliar o tamanho dele...\n De qualquer forma, aqui está o link de download: ${shortUrl}`, id)
-				}
-				break
+			// 	if (videoData.contentLength != undefined) {
+			// 		console.log(videoData.contentLength);
+			// 		if (videoData.contentLength >= 15000000) {
+			// 			return client.reply(from, `Desculpe, para evitar banimentos do WhatsApp, o limite de envio de videos é de 16MB, e esse possui ${mp4impo.replace('    ', ' ')}.\n\nPorém vou deixar o link para você baixar aqui: ${shortUrl}`, id)
+			// 		} else {
+			// 			client.reply(from, `Preparando *${video.videoDetails.title}*\nAguarde...`, id)
+			// 			await client.sendFileFromUrl(message.chatId, videoData.url, 'youtube.mp4', `Link de download: ${shortUrl}`
+			// 			);
+			// 		}
+			// 	} else {
+			// 		await client.reply(message.chatId, `*${video.videoDetails.title}*\n\nTalvez o vídeo era muito grande, ou eu não consegui avaliar o tamanho dele...\n De qualquer forma, aqui está o link de download: ${shortUrl}`, id)
+			// 	}
+			// 	break
 
 			case 'video':
 				if (args.length == 0) return client.reply(from, 'Você usou incorretamente.', id)
@@ -985,76 +988,76 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'play':
-				if (args.length == 0) return client.reply(from, `Você precisa me dar algo para pesquisar\nUso: ${prefix}play [pesquisa]`, id)
-				const playOptions = {
-					limit: 1,
-					gl: 'BR',
-					hl: 'pt'
-				}
-				const res = await ytsr(body.slice(6), playOptions).catch(err => {
-					return client.reply(from, `Não consegui executar a funçõa, me desculpe 😔`, id)
-				})
+			// case 'play':
+			// 	if (args.length == 0) return client.reply(from, `Você precisa me dar algo para pesquisar\nUso: ${prefix}play [pesquisa]`, id)
+			// 	const playOptions = {
+			// 		limit: 1,
+			// 		gl: 'BR',
+			// 		hl: 'pt'
+			// 	}
+			// 	const res = await ytsr(body.slice(6), playOptions).catch(err => {
+			// 		return client.reply(from, `Não consegui executar a funçõa, me desculpe 😔`, id)
+			// 	})
 
-				const videoResult = res.items.filter(item => item.type === 'video')[0]
+			// 	const videoResult = res.items.filter(item => item.type === 'video')[0]
 
-				if (!videoResult) {
-					return client.reply(from, `Não obtive resultados para a sua pesquisa 😔`, id)
-				}
+			// 	if (!videoResult) {
+			// 		return client.reply(from, `Não obtive resultados para a sua pesquisa 😔`, id)
+			// 	}
 
-				const playInfo = await ytdl.getInfo(videoResult.url, {
-					quality: 'highestaudio'
-				});
+			// 	const playInfo = await ytdl.getInfo(videoResult.url, {
+			// 		quality: 'highestaudio'
+			// 	});
 
-				let playStream = ytdl(videoResult.url, {
-					quality: 'highestaudio'
-				});
+			// 	let playStream = ytdl(videoResult.url, {
+			// 		quality: 'highestaudio'
+			// 	});
 
-				let songPlayInfo = {
-					title: playInfo.videoDetails.title,
-					url: playInfo.videoDetails.video_url,
-					lengthSeconds: playInfo.videoDetails.lengthSeconds,
-					authorName: playInfo.videoDetails.author.name,
-					videoId: playInfo.videoDetails.videoId,
-					isPrivate: playInfo.videoDetails.isPrivate,
-				}
+			// 	let songPlayInfo = {
+			// 		title: playInfo.videoDetails.title,
+			// 		url: playInfo.videoDetails.video_url,
+			// 		lengthSeconds: playInfo.videoDetails.lengthSeconds,
+			// 		authorName: playInfo.videoDetails.author.name,
+			// 		videoId: playInfo.videoDetails.videoId,
+			// 		isPrivate: playInfo.videoDetails.isPrivate,
+			// 	}
 
-				client.reply(from, `Encontrei *${songPlayInfo.title}*\n*De:* ${songPlayInfo.authorName}\nEspero muito que seja o correto\nAguarde...`, id)
+			// 	client.reply(from, `Encontrei *${songPlayInfo.title}*\n*De:* ${songPlayInfo.authorName}\nEspero muito que seja o correto\nAguarde...`, id)
 
-				//console.log(songinfo);
-				let testPlaySize = (((songPlayInfo.lengthSeconds * 128000) / 8) / 1024) / 1024
-				console.log(`Estimativa de tamanho do vídeo: ${testPlaySize} MB`);
+			// 	//console.log(songinfo);
+			// 	let testPlaySize = (((songPlayInfo.lengthSeconds * 128000) / 8) / 1024) / 1024
+			// 	console.log(`Estimativa de tamanho do vídeo: ${testPlaySize} MB`);
 
-				if (testPlaySize >= 15) {
-					return client.reply(from, `O arquivo é muito grande ✋😥`, id)
-				}
+			// 	if (testPlaySize >= 15) {
+			// 		return client.reply(from, `O arquivo é muito grande ✋😥`, id)
+			// 	}
 
-				if (songPlayInfo.lengthSeconds > 900) {
-					return client.reply(from, `O vídeo é longo demais ✋😥`, id)
-				}
+			// 	if (songPlayInfo.lengthSeconds > 900) {
+			// 		return client.reply(from, `O vídeo é longo demais ✋😥`, id)
+			// 	}
 
-				ffmpeg(playStream)
-					.audioBitrate(128)
-					.save(`./temp/yt/${songPlayInfo.videoId}.mp3`)
-					.on('end', () => {
-						var playStats = fs.statSync(`./temp/yt/${songPlayInfo.videoId}.mp3`)
-						let realSize = playStats.size / (1024 * 1024);
-						console.log(`Tamanho real: ${realSize} MB`);
-						if (realSize <= 15) {
-							client.sendFile(from, `./temp/yt/${songPlayInfo.videoId}.mp3`, `${songPlayInfo.videoId}.mp3`, null, id).then(f => {
-								try {
-									fs.unlinkSync(`./temp/yt/${songPlayInfo.videoId}.mp3`);
-									console.log(`successfully deleted ${songPlayInfo.videoId}.mp3`);
-								} catch (err) {
-									// handle the error
-									console.log(err);
-								}
-							})
-						} else {
-							return client.reply(from, `O arquivo é muito grande ✋😥`, id)
-						}
-					});
-				break
+			// 	ffmpeg(playStream)
+			// 		.audioBitrate(128)
+			// 		.save(`./temp/yt/${songPlayInfo.videoId}.mp3`)
+			// 		.on('end', () => {
+			// 			var playStats = fs.statSync(`./temp/yt/${songPlayInfo.videoId}.mp3`)
+			// 			let realSize = playStats.size / (1024 * 1024);
+			// 			console.log(`Tamanho real: ${realSize} MB`);
+			// 			if (realSize <= 15) {
+			// 				client.sendFile(from, `./temp/yt/${songPlayInfo.videoId}.mp3`, `${songPlayInfo.videoId}.mp3`, null, id).then(f => {
+			// 					try {
+			// 						fs.unlinkSync(`./temp/yt/${songPlayInfo.videoId}.mp3`);
+			// 						console.log(`successfully deleted ${songPlayInfo.videoId}.mp3`);
+			// 					} catch (err) {
+			// 						// handle the error
+			// 						console.log(err);
+			// 					}
+			// 				})
+			// 			} else {
+			// 				return client.reply(from, `O arquivo é muito grande ✋😥`, id)
+			// 			}
+			// 		});
+			// 	break
 
 
 			case 'qr':
@@ -1125,267 +1128,267 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'tts': // Esse é enormeeeee, fazer o que, sou baiano pra jogar noutro js
-				if (args.length == 1) return client.reply(from, 'Compreensivel, mas não usavel, você esqueceu de definir idioma e frase.')
-				const ttsId = require('node-gtts')('id')
-				const ttsEn = require('node-gtts')('en')
-				const ttsJp = require('node-gtts')('ja')
-				const ttsAr = require('node-gtts')('ar')
-				const ttsAf = require('node-gtts')('af')
-				const ttsSq = require('node-gtts')('sq')
-				const ttsHy = require('node-gtts')('hy')
-				const ttsCa = require('node-gtts')('ca')
-				const ttsZh = require('node-gtts')('zh')
-				const ttsCn = require('node-gtts')('zh-cn')
-				const ttsTw = require('node-gtts')('zh-tw')
-				const ttsYu = require('node-gtts')('zh-yue')
-				const ttsHr = require('node-gtts')('hr')
-				const ttsCs = require('node-gtts')('cs')
-				const ttsDa = require('node-gtts')('da')
-				const ttsNl = require('node-gtts')('nl')
-				const ttsAu = require('node-gtts')('en-au')
-				const ttsUk = require('node-gtts')('en-uk')
-				const ttsUs = require('node-gtts')('en-us')
-				const ttsEo = require('node-gtts')('eo')
-				const ttsFi = require('node-gtts')('fi')
-				const ttsFr = require('node-gtts')('fr')
-				const ttsEl = require('node-gtts')('el')
-				const ttsHt = require('node-gtts')('ht')
-				const ttsHi = require('node-gtts')('hi')
-				const ttsHu = require('node-gtts')('hu')
-				const ttsIs = require('node-gtts')('is')
-				const ttsIt = require('node-gtts')('it')
-				const ttsKo = require('node-gtts')('ko')
-				const ttsLa = require('node-gtts')('la')
-				const ttsLv = require('node-gtts')('lv')
-				const ttsMk = require('node-gtts')('mk')
-				const ttsNo = require('node-gtts')('no')
-				const ttsPl = require('node-gtts')('pl')
-				const ttsRo = require('node-gtts')('ro')
-				const ttsSr = require('node-gtts')('sr')
-				const ttsSk = require('node-gtts')('sk')
-				const ttsEs = require('node-gtts')('es')
-				const ttsSp = require('node-gtts')('es-es')
-				const ttsSu = require('node-gtts')('es-us')
-				const ttsSw = require('node-gtts')('sw')
-				const ttsSv = require('node-gtts')('sv')
-				const ttsTa = require('node-gtts')('ta')
-				const ttsTh = require('node-gtts')('th')
-				const ttsTr = require('node-gtts')('tr')
-				const ttsVi = require('node-gtts')('vi')
-				const ttsCy = require('node-gtts')('cy')
-				const ttsDe = require('node-gtts')('de')
-				const ttsBr = require('node-gtts')('pt-br')
-				const ttsPt = require('node-gtts')('pt')
-				const ttsRu = require('node-gtts')('ru')
-				const dataText = body.slice(8)
-				if (dataText === '') return client.reply(from, 'Ora ora, temos um baka! Você esqueceu de colocar a frase pra falar.', id)
-				if (dataText.length > 500) return client.reply(from, 'Desculpa, mas o limite são 500 letras...', id)
-				var dataBhs = body.slice(5, 7).toLowerCase()
-				if (dataBhs == 'id') {
-					ttsId.save('./temp/tts/resId.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resId.mp3', id)
-					})
-				} else if (dataBhs == 'en') {
-					ttsEn.save('./temp/tts/resEn.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resEn.mp3', id)
-					})
-				} else if (dataBhs == 'jp') {
-					ttsJp.save('./temp/tts/resJp.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resJp.mp3', id)
-					})
-				} else if (dataBhs == 'de') {
-					ttsDe.save('./temp/tts/resDe.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resDe.mp3', id)
-					})
-				} else if (dataBhs == 'br') {
-					ttsBr.save('./temp/tts/resBr.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resBr.mp3', id)
-					})
-				} else if (dataBhs == 'ru') {
-					ttsRu.save('./temp/tts/resRu.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resRu.mp3', id)
-					})
-				} else if (dataBhs == 'ar') {
-					ttsAr.save('./temp/tts/resAr.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resAr.mp3', id)
-					})
-				} else if (dataBhs == 'pt') {
-					ttsPt.save('./temp/tts/resPt.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resPt.mp3', id)
-					})
-				} else if (dataBhs == 'af') {
-					ttsAf.save('./temp/tts/resAf.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resAf.mp3', id)
-					})
-				} else if (dataBhs == 'sq') {
-					ttsSq.save('./temp/tts/resSq.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resSq.mp3', id)
-					})
-				} else if (dataBhs == 'hy') {
-					ttsHy.save('./temp/tts/resHy.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resHy.mp3', id)
-					})
-				} else if (dataBhs == 'ca') {
-					ttsCa.save('./temp/tts/resCa.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resCa.mp3', id)
-					})
-				} else if (dataBhs == 'zh') {
-					ttsZh.save('./temp/tts/resZh.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resZh.mp3', id)
-					})
-				} else if (dataBhs == 'cn') {
-					ttsCn.save('./temp/tts/resCn.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resCn.mp3', id)
-					})
-				} else if (dataBhs == 'tw') {
-					ttsTw.save('./temp/tts/resTw.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resTw.mp3', id)
-					})
-				} else if (dataBhs == 'yu') {
-					ttsYu.save('./temp/tts/resYue.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resYue.mp3', id)
-					})
-				} else if (dataBhs == 'hr') {
-					ttsHr.save('./temp/tts/resHr.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resHr.mp3', id)
-					})
-				} else if (dataBhs == 'cs') {
-					ttsCs.save('./temp/tts/resCs.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resCs.mp3', id)
-					})
-				} else if (dataBhs == 'da') {
-					ttsDa.save('./temp/tts/resDa.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resDa.mp3', id)
-					})
-				} else if (dataBhs == 'nl') {
-					ttsNl.save('./temp/tts/resNl.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resNl.mp3', id)
-					})
-				} else if (dataBhs == 'au') {
-					ttsAu.save('./temp/tts/resAu.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resAu.mp3', id)
-					})
-				} else if (dataBhs == 'uk') {
-					ttsUk.save('./temp/tts/resUk.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resUk.mp3', id)
-					})
-				} else if (dataBhs == 'us') {
-					ttsUs.save('./temp/tts/resUs.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resUs.mp3', id)
-					})
-				} else if (dataBhs == 'eo') {
-					ttsEo.save('./temp/tts/resEo.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resEo.mp3', id)
-					})
-				} else if (dataBhs == 'fi') {
-					ttsFi.save('./temp/tts/resFi.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resFi.mp3', id)
-					})
-				} else if (dataBhs == 'fr') {
-					ttsFr.save('./temp/tts/resFr.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resFr.mp3', id)
-					})
-				} else if (dataBhs == 'el') {
-					ttsEl.save('./temp/tts/resEl.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resEl.mp3', id)
-					})
-				} else if (dataBhs == 'ht') {
-					ttsHt.save('./temp/tts/resJp.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resHt.mp3', id)
-					})
-				} else if (dataBhs == 'hi') {
-					ttsHi.save('./temp/tts/resHi.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resHi.mp3', id)
-					})
-				} else if (dataBhs == 'hu') {
-					ttsHu.save('./temp/tts/resHu.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resHu.mp3', id)
-					})
-				} else if (dataBhs == 'is') {
-					ttsIs.save('./temp/tts/resIs.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resIs.mp3', id)
-					})
-				} else if (dataBhs == 'it') {
-					ttsIt.save('./temp/tts/resIt.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resIt.mp3', id)
-					})
-				} else if (dataBhs == 'ko') {
-					ttsKo.save('./temp/tts/resKo.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resKo.mp3', id)
-					})
-				} else if (dataBhs == 'la') {
-					ttsLa.save('./temp/tts/resLa.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resLa.mp3', id)
-					})
-				} else if (dataBhs == 'lv') {
-					ttsLv.save('./temp/tts/resLv.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resLv.mp3', id)
-					})
-				} else if (dataBhs == 'mk') {
-					ttsMk.save('./temp/tts/resMk.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resMk.mp3', id)
-					})
-				} else if (dataBhs == 'no') {
-					ttsNo.save('./temp/tts/resNo.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resNo.mp3', id)
-					})
-				} else if (dataBhs == 'pl') {
-					ttsPl.save('./temp/tts/resPl.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resPl.mp3', id)
-					})
-				} else if (dataBhs == 'ro') {
-					ttsRo.save('./temp/tts/resRo.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resRo.mp3', id)
-					})
-				} else if (dataBhs == 'sr') {
-					ttsSr.save('./temp/tts/resSr.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resSr.mp3', id)
-					})
-				} else if (dataBhs == 'sk') {
-					ttsSk.save('./temp/tts/resSk.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resSk.mp3', id)
-					})
-				} else if (dataBhs == 'es') {
-					ttsEs.save('./temp/tts/resEs.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resEs.mp3', id)
-					})
-				} else if (dataBhs == 'sp') {
-					ttsSp.save('./temp/tts/resSp.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resSp.mp3', id)
-					})
-				} else if (dataBhs == 'su') {
-					ttsSu.save('./temp/tts/resSu.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resSu.mp3', id)
-					})
-				} else if (dataBhs == 'sw') {
-					ttsSw.save('./temp/tts/resSw.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resSk.mp3', id)
-					})
-				} else if (dataBhs == 'sv') {
-					ttsSv.save('./temp/tts/resSv.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resSv.mp3', id)
-					})
-				} else if (dataBhs == 'ta') {
-					ttsTa.save('./temp/tts/resTa.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resTa.mp3', id)
-					})
-				} else if (dataBhs == 'tr') {
-					ttsTr.save('./temp/tts/resTr.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resTr.mp3', id)
-					})
-				} else if (dataBhs == 'vi') {
-					ttsVi.save('./temp/tts/resVi.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resVi.mp3', id)
-					})
-				} else if (dataBhs == 'cy') {
-					ttsCy.save('./temp/tts/resCy.mp3', dataText, function () {
-						client.sendPtt(from, './temp/tts/resCy.mp3', id)
-					})
-				} else {
-					client.reply(from, `Hmm, '${body.slice(5, 7)}' não é um idioma compativel, para idiomas compativeis digite ${prefix}idiomas.`, id)
-				}
-				break
+			// case 'tts': // Esse é enormeeeee, fazer o que, sou baiano pra jogar noutro js
+			// 	if (args.length == 1) return client.reply(from, 'Compreensivel, mas não usavel, você esqueceu de definir idioma e frase.')
+			// 	const ttsId = require('node-gtts')('id')
+			// 	const ttsEn = require('node-gtts')('en')
+			// 	const ttsJp = require('node-gtts')('ja')
+			// 	const ttsAr = require('node-gtts')('ar')
+			// 	const ttsAf = require('node-gtts')('af')
+			// 	const ttsSq = require('node-gtts')('sq')
+			// 	const ttsHy = require('node-gtts')('hy')
+			// 	const ttsCa = require('node-gtts')('ca')
+			// 	const ttsZh = require('node-gtts')('zh')
+			// 	const ttsCn = require('node-gtts')('zh-cn')
+			// 	const ttsTw = require('node-gtts')('zh-tw')
+			// 	const ttsYu = require('node-gtts')('zh-yue')
+			// 	const ttsHr = require('node-gtts')('hr')
+			// 	const ttsCs = require('node-gtts')('cs')
+			// 	const ttsDa = require('node-gtts')('da')
+			// 	const ttsNl = require('node-gtts')('nl')
+			// 	const ttsAu = require('node-gtts')('en-au')
+			// 	const ttsUk = require('node-gtts')('en-uk')
+			// 	const ttsUs = require('node-gtts')('en-us')
+			// 	const ttsEo = require('node-gtts')('eo')
+			// 	const ttsFi = require('node-gtts')('fi')
+			// 	const ttsFr = require('node-gtts')('fr')
+			// 	const ttsEl = require('node-gtts')('el')
+			// 	const ttsHt = require('node-gtts')('ht')
+			// 	const ttsHi = require('node-gtts')('hi')
+			// 	const ttsHu = require('node-gtts')('hu')
+			// 	const ttsIs = require('node-gtts')('is')
+			// 	const ttsIt = require('node-gtts')('it')
+			// 	const ttsKo = require('node-gtts')('ko')
+			// 	const ttsLa = require('node-gtts')('la')
+			// 	const ttsLv = require('node-gtts')('lv')
+			// 	const ttsMk = require('node-gtts')('mk')
+			// 	const ttsNo = require('node-gtts')('no')
+			// 	const ttsPl = require('node-gtts')('pl')
+			// 	const ttsRo = require('node-gtts')('ro')
+			// 	const ttsSr = require('node-gtts')('sr')
+			// 	const ttsSk = require('node-gtts')('sk')
+			// 	const ttsEs = require('node-gtts')('es')
+			// 	const ttsSp = require('node-gtts')('es-es')
+			// 	const ttsSu = require('node-gtts')('es-us')
+			// 	const ttsSw = require('node-gtts')('sw')
+			// 	const ttsSv = require('node-gtts')('sv')
+			// 	const ttsTa = require('node-gtts')('ta')
+			// 	const ttsTh = require('node-gtts')('th')
+			// 	const ttsTr = require('node-gtts')('tr')
+			// 	const ttsVi = require('node-gtts')('vi')
+			// 	const ttsCy = require('node-gtts')('cy')
+			// 	const ttsDe = require('node-gtts')('de')
+			// 	const ttsBr = require('node-gtts')('pt-br')
+			// 	const ttsPt = require('node-gtts')('pt')
+			// 	const ttsRu = require('node-gtts')('ru')
+			// 	const dataText = body.slice(8)
+			// 	if (dataText === '') return client.reply(from, 'Ora ora, temos um baka! Você esqueceu de colocar a frase pra falar.', id)
+			// 	if (dataText.length > 500) return client.reply(from, 'Desculpa, mas o limite são 500 letras...', id)
+			// 	var dataBhs = body.slice(5, 7).toLowerCase()
+			// 	if (dataBhs == 'id') {
+			// 		ttsId.save('./temp/tts/resId.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resId.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'en') {
+			// 		ttsEn.save('./temp/tts/resEn.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resEn.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'jp') {
+			// 		ttsJp.save('./temp/tts/resJp.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resJp.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'de') {
+			// 		ttsDe.save('./temp/tts/resDe.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resDe.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'br') {
+			// 		ttsBr.save('./temp/tts/resBr.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resBr.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'ru') {
+			// 		ttsRu.save('./temp/tts/resRu.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resRu.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'ar') {
+			// 		ttsAr.save('./temp/tts/resAr.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resAr.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'pt') {
+			// 		ttsPt.save('./temp/tts/resPt.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resPt.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'af') {
+			// 		ttsAf.save('./temp/tts/resAf.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resAf.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'sq') {
+			// 		ttsSq.save('./temp/tts/resSq.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resSq.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'hy') {
+			// 		ttsHy.save('./temp/tts/resHy.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resHy.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'ca') {
+			// 		ttsCa.save('./temp/tts/resCa.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resCa.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'zh') {
+			// 		ttsZh.save('./temp/tts/resZh.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resZh.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'cn') {
+			// 		ttsCn.save('./temp/tts/resCn.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resCn.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'tw') {
+			// 		ttsTw.save('./temp/tts/resTw.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resTw.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'yu') {
+			// 		ttsYu.save('./temp/tts/resYue.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resYue.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'hr') {
+			// 		ttsHr.save('./temp/tts/resHr.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resHr.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'cs') {
+			// 		ttsCs.save('./temp/tts/resCs.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resCs.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'da') {
+			// 		ttsDa.save('./temp/tts/resDa.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resDa.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'nl') {
+			// 		ttsNl.save('./temp/tts/resNl.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resNl.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'au') {
+			// 		ttsAu.save('./temp/tts/resAu.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resAu.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'uk') {
+			// 		ttsUk.save('./temp/tts/resUk.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resUk.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'us') {
+			// 		ttsUs.save('./temp/tts/resUs.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resUs.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'eo') {
+			// 		ttsEo.save('./temp/tts/resEo.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resEo.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'fi') {
+			// 		ttsFi.save('./temp/tts/resFi.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resFi.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'fr') {
+			// 		ttsFr.save('./temp/tts/resFr.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resFr.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'el') {
+			// 		ttsEl.save('./temp/tts/resEl.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resEl.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'ht') {
+			// 		ttsHt.save('./temp/tts/resJp.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resHt.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'hi') {
+			// 		ttsHi.save('./temp/tts/resHi.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resHi.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'hu') {
+			// 		ttsHu.save('./temp/tts/resHu.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resHu.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'is') {
+			// 		ttsIs.save('./temp/tts/resIs.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resIs.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'it') {
+			// 		ttsIt.save('./temp/tts/resIt.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resIt.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'ko') {
+			// 		ttsKo.save('./temp/tts/resKo.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resKo.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'la') {
+			// 		ttsLa.save('./temp/tts/resLa.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resLa.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'lv') {
+			// 		ttsLv.save('./temp/tts/resLv.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resLv.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'mk') {
+			// 		ttsMk.save('./temp/tts/resMk.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resMk.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'no') {
+			// 		ttsNo.save('./temp/tts/resNo.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resNo.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'pl') {
+			// 		ttsPl.save('./temp/tts/resPl.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resPl.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'ro') {
+			// 		ttsRo.save('./temp/tts/resRo.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resRo.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'sr') {
+			// 		ttsSr.save('./temp/tts/resSr.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resSr.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'sk') {
+			// 		ttsSk.save('./temp/tts/resSk.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resSk.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'es') {
+			// 		ttsEs.save('./temp/tts/resEs.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resEs.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'sp') {
+			// 		ttsSp.save('./temp/tts/resSp.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resSp.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'su') {
+			// 		ttsSu.save('./temp/tts/resSu.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resSu.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'sw') {
+			// 		ttsSw.save('./temp/tts/resSw.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resSk.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'sv') {
+			// 		ttsSv.save('./temp/tts/resSv.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resSv.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'ta') {
+			// 		ttsTa.save('./temp/tts/resTa.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resTa.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'tr') {
+			// 		ttsTr.save('./temp/tts/resTr.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resTr.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'vi') {
+			// 		ttsVi.save('./temp/tts/resVi.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resVi.mp3', id)
+			// 		})
+			// 	} else if (dataBhs == 'cy') {
+			// 		ttsCy.save('./temp/tts/resCy.mp3', dataText, function () {
+			// 			client.sendPtt(from, './temp/tts/resCy.mp3', id)
+			// 		})
+			// 	} else {
+			// 		client.reply(from, `Hmm, '${body.slice(5, 7)}' não é um idioma compativel, para idiomas compativeis digite ${prefix}idiomas.`, id)
+			// 	}
+			//	break
 
 
 			case 'idiomas':
@@ -1535,23 +1538,23 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'welcome':
-				if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
-				if (!isOwner) return client.reply(from, mess.error.Kl, id)
-				if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
-				if (args[0] == 'on') {
-					welkom.push(chat.id)
-					fs.writeFileSync('./database/group/welcome.json', JSON.stringify(welkom))
-					client.reply(from, 'Feito! As funções de Boas-Vindas e Good-Bye foram acionadas.', id)
-				} else if (args[0] == 'off') {
-					let welcom = welkom.indexOf(chatId)
-					welkom.splice(welcom, 1)
-					fs.writeFileSync('./database/group/welcome.json', JSON.stringify(welkom))
-					client.reply(from, 'Entendido! Desativei as opções de Boas-Vindas e Good-Bye.', id)
-				} else {
-					client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
-				}
-				break
+			// case 'welcome':
+			// 	if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
+			// 	if (!isOwner) return client.reply(from, mess.error.Kl, id)
+			// 	if (args.length !== 1) return client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
+			// 	if (args[0] == 'on') {
+			// 		welkom.push(chat.id)
+			// 		fs.writeFileSync('./database/group/welcome.json', JSON.stringify(welkom))
+			// 		client.reply(from, 'Feito! As funções de Boas-Vindas e Good-Bye foram acionadas.', id)
+			// 	} else if (args[0] == 'off') {
+			// 		let welcom = welkom.indexOf(chatId)
+			// 		welkom.splice(welcom, 1)
+			// 		fs.writeFileSync('./database/group/welcome.json', JSON.stringify(welkom))
+			// 		client.reply(from, 'Entendido! Desativei as opções de Boas-Vindas e Good-Bye.', id)
+			// 	} else {
+			// 		client.reply(from, 'Você esqueceu de colocar se quer ativado [on], ou desativado [off].', id)
+			// 	}
+			// 	break
 
 
 			case 'macaco':
@@ -1967,33 +1970,33 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'everyone':
-				if (isGroupMsg && isGroupAdmins) {
-					const groupMem = await client.getGroupMembers(groupId)
-					let hehe = `Olá! Todos marcados!\nAssunto: ${body.slice(10)}\n\n`
-					for (let i = 0; i < groupMem.length; i++) {
-						hehe += '- '
-						hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
-					}
-					hehe += '\nObrigado & Amo vocês <3'
-					await sleep(2000)
-					await client.sendTextWithMentions(from, hehe, id)
-				} else if (isGroupMsg && isOwner) {
-					const groupMem = await client.getGroupMembers(groupId)
-					let hehe = `Olá! Todos marcados!\nAssunto: ${body.slice(10)}\n\n`
-					for (let i = 0; i < groupMem.length; i++) {
-						hehe += '- '
-						hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
-					}
-					hehe += '\nObrigada & Amo vocês <3'
-					await sleep(2000)
-					await client.sendTextWithMentions(from, hehe, id)
-				} else if (isGroupMsg) {
-					await client.reply(from, 'Desculpe, somente os administradores podem usar esse comando...', id)
-				} else {
-					await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
-				}
-				break
+			// case 'everyone':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		const groupMem = await client.getGroupMembers(groupId)
+			// 		let hehe = `Olá! Todos marcados!\nAssunto: ${body.slice(10)}\n\n`
+			// 		for (let i = 0; i < groupMem.length; i++) {
+			// 			hehe += '- '
+			// 			hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
+			// 		}
+			// 		hehe += '\nObrigado & Amo vocês <3'
+			// 		await sleep(2000)
+			// 		await client.sendTextWithMentions(from, hehe, id)
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		const groupMem = await client.getGroupMembers(groupId)
+			// 		let hehe = `Olá! Todos marcados!\nAssunto: ${body.slice(10)}\n\n`
+			// 		for (let i = 0; i < groupMem.length; i++) {
+			// 			hehe += '- '
+			// 			hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
+			// 		}
+			// 		hehe += '\nObrigada & Amo vocês <3'
+			// 		await sleep(2000)
+			// 		await client.sendTextWithMentions(from, hehe, id)
+			// 	} else if (isGroupMsg) {
+			// 		await client.reply(from, 'Desculpe, somente os administradores podem usar esse comando...', id)
+			// 	} else {
+			// 		await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
+			// 	}
+			// 	break
 
 
 			case 'random':
@@ -2034,6 +2037,22 @@ module.exports = msgHandler = async (client, message) => {
 				client.reply(from, 'Feito, sai de todos os grupos.', id)
 				break
 
+			case 'leavemin':
+				if (!isOwner) return client.reply(from, 'Somente o meu criador tem acesso a este comando.', id)
+				const allGroupsMin = await client.getAllGroups()
+				await client.reply(from, 'Iniciando...')
+				for (let groupMin of allGroupsMin) {
+					let groupTotalMembers = groupMin.groupMetadata.participants.length
+					if (groupTotalMembers < memberMinimum) {
+						await client.sendText(groupMin.id, `Estou saindo de grupos que tenham menos de *${memberMinimum}* participantes, pois o seu me parece ter *${groupTotalMembers}* participantes\n\nSe esse grupo é só para fazer stickers, por favor use o meu privado para isso. Assim você não ocupa um slot que poderia ser usado para quem quer usar mais das minhas funções 😔\n\nSe você acredita que isso foi um erro.\nUse o comando *${prefix}entrar* _Link do grupo_`)
+						await client.leaveGroup(groupMin.id)
+						await client.deleteChat(groupMin.id)
+						console.log(`Saindo de ${groupMin.groupMetadata.name || groupMin.groupMetadata.formattedTitle}`);
+					}
+				}
+				client.reply(from, `Feito, sai de todos os grupos, que tinham menos de ${memberMinimum}.`, id)
+				break
+
 			case 'deletartudo':
 			case 'dellall':
 				if (!isOwner) return client.reply(from, 'Somente o meu criador tem acesso a este comando.', id)
@@ -2055,16 +2074,16 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'add':
-				if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
-				if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
-				if (args.length !== 1) return client.reply(from, 'Você precisa especificar o número de telefone.', id)
-				try {
-					await client.addParticipant(from, `${args[0]}@c.us`)
-				} catch {
-					client.reply(from, mess.error.Ad, id)
-				}
-				break
+			// case 'add':
+			// 	if (!isGroupMsg) return client.reply(from, mess.error.Gp, id)
+			// 	if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
+			// 	if (args.length !== 1) return client.reply(from, 'Você precisa especificar o número de telefone.', id)
+			// 	try {
+			// 		await client.addParticipant(from, `${args[0]}@c.us`)
+			// 	} catch {
+			// 		client.reply(from, mess.error.Ad, id)
+			// 	}
+			// 	break
 
 
 
@@ -2294,147 +2313,147 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'kick':
-				if (isGroupMsg && isGroupAdmins) {
-					if (!isBotGroupAdmins) return client.reply(from, 'Pra isso eu preciso ser parte dos Administradores.', id)
-					if (mentionedJidList.length === 0) return client.reply(from, 'Você digitou o comando de forma muito errada, arrume e envie certo.', id)
-					await client.sendTextWithMentions(from, `Banindo membro comum:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
-					for (let i = 0; i < mentionedJidList.length; i++) {
-						if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
-						await client.removeParticipant(groupId, mentionedJidList[i])
-					}
-				} else if (isGroupMsg && isOwner) {
-					if (!isBotGroupAdmins) return client.reply(from, 'Pra isso eu preciso ser parte dos Administradores.', id)
-					if (mentionedJidList.length === 0) return client.reply(from, 'Você digitou o comando de forma muito errada, arrume e envie certo.', id)
-					await client.sendTextWithMentions(from, `Banindo membro comum:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
-					for (let i = 0; i < mentionedJidList.length; i++) {
-						if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
-						await client.removeParticipant(groupId, mentionedJidList[i])
-					}
-				} else if (isGroupMsg) {
-					await client.reply(from, 'Desculpe, somente os administradores podem usar esse comando...', id)
-				} else {
-					await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
-				}
-				break
+			// case 'kick':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		if (!isBotGroupAdmins) return client.reply(from, 'Pra isso eu preciso ser parte dos Administradores.', id)
+			// 		if (mentionedJidList.length === 0) return client.reply(from, 'Você digitou o comando de forma muito errada, arrume e envie certo.', id)
+			// 		await client.sendTextWithMentions(from, `Banindo membro comum:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
+			// 		for (let i = 0; i < mentionedJidList.length; i++) {
+			// 			if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
+			// 			await client.removeParticipant(groupId, mentionedJidList[i])
+			// 		}
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		if (!isBotGroupAdmins) return client.reply(from, 'Pra isso eu preciso ser parte dos Administradores.', id)
+			// 		if (mentionedJidList.length === 0) return client.reply(from, 'Você digitou o comando de forma muito errada, arrume e envie certo.', id)
+			// 		await client.sendTextWithMentions(from, `Banindo membro comum:\n${mentionedJidList.map(x => `@${x.replace('@c.us', '')}`).join('\n')}`)
+			// 		for (let i = 0; i < mentionedJidList.length; i++) {
+			// 			if (groupAdmins.includes(mentionedJidList[i])) return client.reply(from, mess.error.Ki, id)
+			// 			await client.removeParticipant(groupId, mentionedJidList[i])
+			// 		}
+			// 	} else if (isGroupMsg) {
+			// 		await client.reply(from, 'Desculpe, somente os administradores podem usar esse comando...', id)
+			// 	} else {
+			// 		await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
+			// 	}
+			// 	break
 
-			case 'sair':
-			case 'leave':
-				if (isGroupMsg && isGroupAdmins) {
-					await client.sendText(from, 'Terei que sair mas tomará que voltemos a nós ver em breve! <3').then(() => client.leaveGroup(groupId))
-				} else if (isGroupMsg && isOwner) {
-					await client.sendText(from, 'Terei que sair mas tomará que voltemos a nós ver em breve! <3').then(() => client.leaveGroup(groupId))
-				} else if (isGroupMsg) {
-					await client.reply(from, 'Desculpe, somente os administradores e meu dono podem usar esse comando...', id)
-				} else {
-					await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
-				}
-				break
-
-
-			case 'promote':
-				if (isGroupMsg && isGroupAdmins) {
-					if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
-					if (mentionedJidList.length == 0) return client.reply(from, 'Você esqueceu de marcar a pessoa que quer tornar administrador.', id)
-					if (mentionedJidList.length >= 2) return client.reply(from, 'Desculpe, só posso demitir 1 por vez.', id)
-					if (groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Bom, ele já é um administrador.', id)
-					await client.promoteParticipant(groupId, mentionedJidList[0])
-					await client.sendTextWithMentions(from, `Promovendo membro comum @${mentionedJidList[0]} a administrador de bar.`)
-				} else if (isGroupMsg && isOwner) {
-					if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
-					if (mentionedJidList.length == 0) return client.reply(from, 'Você esqueceu de marcar a pessoa que quer tornar administrador.', id)
-					if (mentionedJidList.length >= 2) return client.reply(from, 'Desculpe, só posso demitir 1 por vez.', id)
-					if (groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Bom, ele já é um administrador.', id)
-					await client.promoteParticipant(groupId, mentionedJidList[0])
-					await client.sendTextWithMentions(from, `Promovendo membro comum @${mentionedJidList[0]} a administrador de bar.`)
-				} else if (isGroupMsg) {
-					await client.reply(from, 'Desculpe, somente os administradores podem usar esse comando...', id)
-				} else {
-					await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
-				}
-				break
+			// case 'sair':
+			// case 'leave':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		await client.sendText(from, 'Terei que sair mas tomará que voltemos a nós ver em breve! <3').then(() => client.leaveGroup(groupId))
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		await client.sendText(from, 'Terei que sair mas tomará que voltemos a nós ver em breve! <3').then(() => client.leaveGroup(groupId))
+			// 	} else if (isGroupMsg) {
+			// 		await client.reply(from, 'Desculpe, somente os administradores e meu dono podem usar esse comando...', id)
+			// 	} else {
+			// 		await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
+			// 	}
+			// 	break
 
 
-			case 'demote':
-				if (isGroupMsg && isGroupAdmins) {
-					if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
-					if (mentionedJidList.length == 0) return client.reply(from, 'Você esqueceu de marcar a pessoa que quer demitir.', id)
-					if (mentionedJidList.length >= 2) return client.reply(from, 'Desculpe, só posso demitir 1 por vez.', id)
-					if (!groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Bom, ele não é um administrador.', id)
-					await client.demoteParticipant(groupId, mentionedJidList[0])
-					await client.sendTextWithMentions(from, `Demitindo administrador do bar @${mentionedJidList[0]}.`)
-				} else if (isGroupMsg && isOwner) {
-					if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
-					if (mentionedJidList.length == 0) return client.reply(from, 'Você esqueceu de marcar a pessoa que quer demitir.', id)
-					if (mentionedJidList.length >= 2) return client.reply(from, 'Desculpe, só posso demitir 1 por vez.', id)
-					if (!groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Bom, ele não é um administrador.', id)
-					await client.sendTextWithMentions(from, `Demitindo administrador do bar @${mentionedJidList[0]}.`)
-					await client.demoteParticipant(groupId, mentionedJidList[0])
-				} else if (isGroupMsg) {
-					await client.reply(from, 'Desculpe, somente os administradores podem rebaixar membros pelo bot.', id)
-				} else {
-					await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
-				}
-				break
-
-			case 'status':
-			case 'botstatus':
-			case 'botstat':
-				const loadedMsg = await client.getAmountOfLoadedMessages()
-				const chatIds = await client.getAllChatIds()
-				const groups = await client.getAllGroups()
-				client.sendText(from, `Status :\n- *${loadedMsg}* Mensagens recebidas após ligar\n- *${groups.length}* Conversas em grupo\n- *${chatIds.length - groups.length}* Conversas no PV\n- *${chatIds.length}* Total de conversas`)
-				break
+			// case 'promote':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
+			// 		if (mentionedJidList.length == 0) return client.reply(from, 'Você esqueceu de marcar a pessoa que quer tornar administrador.', id)
+			// 		if (mentionedJidList.length >= 2) return client.reply(from, 'Desculpe, só posso demitir 1 por vez.', id)
+			// 		if (groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Bom, ele já é um administrador.', id)
+			// 		await client.promoteParticipant(groupId, mentionedJidList[0])
+			// 		await client.sendTextWithMentions(from, `Promovendo membro comum @${mentionedJidList[0]} a administrador de bar.`)
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
+			// 		if (mentionedJidList.length == 0) return client.reply(from, 'Você esqueceu de marcar a pessoa que quer tornar administrador.', id)
+			// 		if (mentionedJidList.length >= 2) return client.reply(from, 'Desculpe, só posso demitir 1 por vez.', id)
+			// 		if (groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Bom, ele já é um administrador.', id)
+			// 		await client.promoteParticipant(groupId, mentionedJidList[0])
+			// 		await client.sendTextWithMentions(from, `Promovendo membro comum @${mentionedJidList[0]} a administrador de bar.`)
+			// 	} else if (isGroupMsg) {
+			// 		await client.reply(from, 'Desculpe, somente os administradores podem usar esse comando...', id)
+			// 	} else {
+			// 		await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
+			// 	}
+			// 	break
 
 
-			case 'entrar':
-			case 'join':
-				if (args.length == 0) return client.reply(from, 'Sei la, tem algo errado nisso ai!', id)
-				const gplk = body.slice(6)
-				const tGr = await client.getAllGroups()
-				const isLink = gplk.match(/(https:\/\/chat.whatsapp.com)/gi)
-				const check = await client.inviteInfo(gplk)
-				if (!isLink) return client.reply(from, 'Link errado', id)
+			// case 'demote':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
+			// 		if (mentionedJidList.length == 0) return client.reply(from, 'Você esqueceu de marcar a pessoa que quer demitir.', id)
+			// 		if (mentionedJidList.length >= 2) return client.reply(from, 'Desculpe, só posso demitir 1 por vez.', id)
+			// 		if (!groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Bom, ele não é um administrador.', id)
+			// 		await client.demoteParticipant(groupId, mentionedJidList[0])
+			// 		await client.sendTextWithMentions(from, `Demitindo administrador do bar @${mentionedJidList[0]}.`)
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		if (!isBotGroupAdmins) return client.reply(from, mess.error.Ba, id)
+			// 		if (mentionedJidList.length == 0) return client.reply(from, 'Você esqueceu de marcar a pessoa que quer demitir.', id)
+			// 		if (mentionedJidList.length >= 2) return client.reply(from, 'Desculpe, só posso demitir 1 por vez.', id)
+			// 		if (!groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Bom, ele não é um administrador.', id)
+			// 		await client.sendTextWithMentions(from, `Demitindo administrador do bar @${mentionedJidList[0]}.`)
+			// 		await client.demoteParticipant(groupId, mentionedJidList[0])
+			// 	} else if (isGroupMsg) {
+			// 		await client.reply(from, 'Desculpe, somente os administradores podem rebaixar membros pelo bot.', id)
+			// 	} else {
+			// 		await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
+			// 	}
+			// 	break
 
-				if (from.startsWith(alwaysAllowDDD)) { // entra em grupos que tenham ddd em 'alwaysAllowDDD' definido no arquivo 'settings.json', independentemente da quantidade de membros ou grupos
-					if (check.status === 200) {
-						await client.joinGroupViaLink(gplk)
-						await client.reply(from, 'Entrando no grupo...')
-					} else {
-						await client.reply(from, 'Link invalido', id)
-					}
-				}
-				else {
-					if (tGr.length >= groupLimit) return client.reply(from, `Desculpe, o máximo de grupos que o Bot pode estar simultaneamente foi atingido.\nPortanto não posso ficar aqui ✋😔\n\nLimite: ${groupLimit}`, id)
-					if (check.size >= memberLimit) return client.reply(from, `Desculpe, o máximo de usuários permitidos em um grupo para que o bot possa ficar é de ${memberLimit}, esse grupo tem ${check.size}.\nInfelizmente, terei de sair desse grupo ✋😔`)
-					if (check.size <= memberMinimum) return client.reply(from, `Desculpe, o mínimo de usuários permitidos em um grupo para que o bot possa ficar é de ${memberMinimum}, esse grupo tem ${check.size}.\nInfelizmente, não posso entrar no grupo ✋😔`, id)
-					if (check.status === 200) {
-						await client.joinGroupViaLink(gplk)
-						await client.reply(from, 'Entrando no grupo...')
-					} else {
-						await client.reply(from, 'Link invalido', id)
-					}
-				}
-				break
+			// case 'status':
+			// case 'botstatus':
+			// case 'botstat':
+			// 	const loadedMsg = await client.getAmountOfLoadedMessages()
+			// 	const chatIds = await client.getAllChatIds()
+			// 	const groups = await client.getAllGroups()
+			// 	client.sendText(from, `Status :\n- *${loadedMsg}* Mensagens recebidas após ligar\n- *${groups.length}* Conversas em grupo\n- *${chatIds.length - groups.length}* Conversas no PV\n- *${chatIds.length}* Total de conversas`)
+			// 	break
 
 
-			case 'delete':
-			case 'del':
-				if (isGroupMsg && isGroupAdmins) {
-					if (!quotedMsg) return client.reply(from, 'Você precisa marcar a mensagem que deseja deletar, obviamente, uma minha.', id)
-					if (!quotedMsgObj.fromMe) return client.reply(from, 'Só posso deletar minhas mensagens!', id)
-					await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
-				} else if (isGroupMsg && isOwner) {
-					if (!quotedMsg) return client.reply(from, 'Você precisa marcar a mensagem que deseja deletar, obviamente, uma minha.', id)
-					if (!quotedMsgObj.fromMe) return client.reply(from, 'Só posso deletar minhas mensagens!', id)
-					await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
-				} else if (isGroupMsg) {
-					if (!quotedMsgObj.fromMe) return client.reply(from, 'Só posso deletar minhas mensagens!', id)
-					await client.reply(from, 'Desculpe, somente meu dono e os administradores podem deletar minhas mensagens.', id)
-				} else {
-					await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
-				}
-				break
+			// case 'entrar':
+			// case 'join':
+			// 	if (args.length == 0) return client.reply(from, 'Sei la, tem algo errado nisso ai!', id)
+			// 	const gplk = body.slice(6)
+			// 	const tGr = await client.getAllGroups()
+			// 	const isLink = gplk.match(/(https:\/\/chat.whatsapp.com)/gi)
+			// 	const check = await client.inviteInfo(gplk)
+			// 	if (!isLink) return client.reply(from, 'Link errado', id)
+
+			// 	if (from.startsWith(alwaysAllowDDD)) { // entra em grupos que tenham ddd em 'alwaysAllowDDD' definido no arquivo 'settings.json', independentemente da quantidade de membros ou grupos
+			// 		if (check.status === 200) {
+			// 			await client.joinGroupViaLink(gplk)
+			// 			await client.reply(from, 'Entrando no grupo...')
+			// 		} else {
+			// 			await client.reply(from, 'Link invalido', id)
+			// 		}
+			// 	}
+			// 	else {
+			// 		if (tGr.length >= groupLimit) return client.reply(from, `Desculpe, o máximo de grupos que o Bot pode estar simultaneamente foi atingido.\nPortanto não posso ficar aqui ✋😔\n\nLimite: ${groupLimit}`, id)
+			// 		if (check.size >= memberLimit) return client.reply(from, `Desculpe, o máximo de usuários permitidos em um grupo para que o bot possa ficar é de ${memberLimit}, esse grupo tem ${check.size}.\nInfelizmente, terei de sair desse grupo ✋😔`)
+			// 		if (check.size <= memberMinimum) return client.reply(from, `Desculpe, o mínimo de usuários permitidos em um grupo para que o bot possa ficar é de ${memberMinimum}, esse grupo tem ${check.size}.\nInfelizmente, não posso entrar no grupo ✋😔`, id)
+			// 		if (check.status === 200) {
+			// 			await client.joinGroupViaLink(gplk)
+			// 			await client.reply(from, 'Entrando no grupo...')
+			// 		} else {
+			// 			await client.reply(from, 'Link invalido', id)
+			// 		}
+			// 	}
+			// 	break
+
+
+			// case 'delete':
+			// case 'del':
+			// 	if (isGroupMsg && isGroupAdmins) {
+			// 		if (!quotedMsg) return client.reply(from, 'Você precisa marcar a mensagem que deseja deletar, obviamente, uma minha.', id)
+			// 		if (!quotedMsgObj.fromMe) return client.reply(from, 'Só posso deletar minhas mensagens!', id)
+			// 		await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
+			// 	} else if (isGroupMsg && isOwner) {
+			// 		if (!quotedMsg) return client.reply(from, 'Você precisa marcar a mensagem que deseja deletar, obviamente, uma minha.', id)
+			// 		if (!quotedMsgObj.fromMe) return client.reply(from, 'Só posso deletar minhas mensagens!', id)
+			// 		await client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
+			// 	} else if (isGroupMsg) {
+			// 		if (!quotedMsgObj.fromMe) return client.reply(from, 'Só posso deletar minhas mensagens!', id)
+			// 		await client.reply(from, 'Desculpe, somente meu dono e os administradores podem deletar minhas mensagens.', id)
+			// 	} else {
+			// 		await client.reply(from, 'Esse comando apenas pode ser usado em grupos!', id)
+			// 	}
+			// 	break
 
 
 			case 'tela':
@@ -2972,10 +2991,10 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'tapa':
-				const tapi = await axios.get('https://nekos.life/api/v2/img/slap')
-				await client.sendFileFromUrl(from, tapi.data.url, '', '', id)
-				break
+			// case 'tapa':
+			// 	const tapi = await axios.get('https://nekos.life/api/v2/img/slap')
+			// 	await client.sendFileFromUrl(from, tapi.data.url, '', '', id)
+			// 	break
 
 
 			case 'gato':
@@ -2991,10 +3010,10 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'pokemon':
-				q7 = Math.floor(Math.random() * 890) + 1;
-				await client.sendFileFromUrl(from, 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/' + q7 + '.png', 'Pokemon.png', '', id)
-				break
+			// case 'pokemon':
+			// 	q7 = Math.floor(Math.random() * 890) + 1;
+			// 	await client.sendFileFromUrl(from, 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/' + q7 + '.png', 'Pokemon.png', '', id)
+			// 	break
 
 
 			case 'screenshot':
@@ -3018,53 +3037,53 @@ module.exports = msgHandler = async (client, message) => {
 				break
 
 
-			case 'gay':
-				gaak = body.trim().split(' ')
-				var lgbt = ["lésbica", "gay", "bissexual", "transgenero", "queer", "intersexual", "pedro-sexual", "negrosexual", "helicoptero sexual", "ageneros", "androgino", "assexual", "macaco-sexual", "dedo-sexual", "Sexo-Inexplicavel", "predio-sexual", "sexual-não-sexual", "pansexual", "kink", "incestuoso", "comedor-de-casadas", "unicornio-sexual", "maniaco-sexual"]
-				var guei = lgbt[Math.floor(Math.random() * lgbt.length)]
-				if (args.length == 1) {
-					await client.sendTextWithMentions(from, gaak[1] + ' é ' + lvpc + '% ' + guei + '.')
-				} else {
-					await client.reply(from, `Você é ` + lvpc + '% ' + guei + '.', id)
-				}
-				break
+			// case 'gay':
+			// 	gaak = body.trim().split(' ')
+			// 	var lgbt = ["lésbica", "gay", "bissexual", "transgenero", "queer", "intersexual", "pedro-sexual", "negrosexual", "helicoptero sexual", "ageneros", "androgino", "assexual", "macaco-sexual", "dedo-sexual", "Sexo-Inexplicavel", "predio-sexual", "sexual-não-sexual", "pansexual", "kink", "incestuoso", "comedor-de-casadas", "unicornio-sexual", "maniaco-sexual"]
+			// 	var guei = lgbt[Math.floor(Math.random() * lgbt.length)]
+			// 	if (args.length == 1) {
+			// 		await client.sendTextWithMentions(from, gaak[1] + ' é ' + lvpc + '% ' + guei + '.')
+			// 	} else {
+			// 		await client.reply(from, `Você é ` + lvpc + '% ' + guei + '.', id)
+			// 	}
+			// 	break
 
 
-			case 'chance':
-				if (args.length == 0) return client.reply(from, 'Defina algo para analisar.', id)
-				await client.reply(from, `_De acordo com meus calculos super avançados de ~gato femea~ robô a chance de..._ \n\n*"${body.slice(8)}"*\n\n_...ser realidade é de_ *${lvpc}%.*`, id)
-				break
+			// case 'chance':
+			// 	if (args.length == 0) return client.reply(from, 'Defina algo para analisar.', id)
+			// 	await client.reply(from, `_De acordo com meus calculos super avançados de ~gato femea~ robô a chance de..._ \n\n*"${body.slice(8)}"*\n\n_...ser realidade é de_ *${lvpc}%.*`, id)
+			// 	break
 
 
-			case 'kiss':
-				arqa = body.trim().split(' ')
-				if (args.length == 1) {
-					const persona = author.replace('@c.us', '')
-					client.sendTextWithMentions(from, 'Minha nossa! @' + persona + ' deu um beijo em ' + arqa[1] + ' !')
-					if (double == 1) {
-						await client.sendGiphyAsSticker(from, 'https://media.giphy.com/media/vUrwEOLtBUnJe/giphy.gif')
-					} else {
-						await client.sendGiphyAsSticker(from, 'https://media.giphy.com/media/1wmtU5YhqqDKg/giphy.gif')
-					}
-				} else {
-					await client.reply(from, 'Marque ~apenas uma~ a pessoa quem você quer beijar hihihi', id)
-				}
-				break
+			// case 'kiss':
+			// 	arqa = body.trim().split(' ')
+			// 	if (args.length == 1) {
+			// 		const persona = author.replace('@c.us', '')
+			// 		client.sendTextWithMentions(from, 'Minha nossa! @' + persona + ' deu um beijo em ' + arqa[1] + ' !')
+			// 		if (double == 1) {
+			// 			await client.sendGiphyAsSticker(from, 'https://media.giphy.com/media/vUrwEOLtBUnJe/giphy.gif')
+			// 		} else {
+			// 			await client.sendGiphyAsSticker(from, 'https://media.giphy.com/media/1wmtU5YhqqDKg/giphy.gif')
+			// 		}
+			// 	} else {
+			// 		await client.reply(from, 'Marque ~apenas uma~ a pessoa quem você quer beijar hihihi', id)
+			// 	}
+			// 	break
 
-			case 'slap':
-				arq = body.trim().split(' ')
-				const person = author.replace('@c.us', '')
-				await client.sendGiphyAsSticker(from, 'https://media.giphy.com/media/S8507sBJm1598XnsgD/source.gif')
-				client.sendTextWithMentions(from, '@' + person + ' *deu um tapa em* ' + arq[1])
-				break
+			// case 'slap':
+			// 	arq = body.trim().split(' ')
+			// 	const person = author.replace('@c.us', '')
+			// 	await client.sendGiphyAsSticker(from, 'https://media.giphy.com/media/S8507sBJm1598XnsgD/source.gif')
+			// 	client.sendTextWithMentions(from, '@' + person + ' *deu um tapa em* ' + arq[1])
+			// 	break
 
-			case 'getmeme':
-				const response = await axios.get('https://meme-api.herokuapp.com/gimme/memesbrasil');
-				const {
-					postlink, title, subreddit, url, nsfw, spoiler
-				} = response.data
-				client.sendFileFromUrl(from, `${url}`, 'meme.jpg', `${title}`, id)
-				break
+			// case 'getmeme':
+			// 	const response = await axios.get('https://meme-api.herokuapp.com/gimme/memesbrasil');
+			// 	const {
+			// 		postlink, title, subreddit, url, nsfw, spoiler
+			// 	} = response.data
+			// 	client.sendFileFromUrl(from, `${url}`, 'meme.jpg', `${title}`, id)
+			// 	break
 
 			case 'date':
 				const timeda = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
