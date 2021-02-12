@@ -52,3 +52,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "blacklist",
+    description: "Ativa ou desativa a lista negra.\nEla irá remover automáticamente pessoas ao entrarem no grupo, que estiverem na lista negra",
+    usage: `*Para ligar, use\n${prefix}blacklist* _ON_\nDesligar, use\n${prefix}blacklist _OFF_\nVocê precisa ativar as boas vindas para que isso funcione...`
+};

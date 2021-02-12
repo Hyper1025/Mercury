@@ -28,3 +28,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "img",
+    description: "Extrai a imagem de um sticker",
+    usage: `Mencione o sticker com *${prefix}img*`
+};

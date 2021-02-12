@@ -64,3 +64,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Kick",
+    description: "Remove alguém do grupinho",
+    usage: `*${prefix}Kick* _Mencione alguém_`
+};

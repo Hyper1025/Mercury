@@ -53,3 +53,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "MP4",
+    description: "Baixa um vídeo do YouTube para você",
+    usage: `${prefix}mp4* _link_`
+};

@@ -29,3 +29,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "gay",
+    description: "Descubra a que tipo de LBGT+ alguém é...",
+    usage: `*${prefix}gay*\n*${prefix}gay* _mencione alguém_`
+};

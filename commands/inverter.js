@@ -21,3 +21,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Inverter",
+    description: "Inverte o texto que você enviar",
+    usage: `*${prefix}Inverter* _Texto_`
+};

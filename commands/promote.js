@@ -43,3 +43,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Promote",
+    description: "Promove alguém para ADM",
+    usage: `*${prefix}promote* _Mencione alguém_`
+};

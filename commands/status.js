@@ -21,3 +21,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Status",
+    description: "Informações do bot",
+    usage: `*${prefix}status*`
+};

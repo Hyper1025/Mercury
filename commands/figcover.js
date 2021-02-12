@@ -38,3 +38,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "figcover",
+    description: "Serve para fazer figurinhas do whatsapp!\nPorém ela preenche todo canvas do sticker. Ou seja, corta a imagem para preencher o sticker o máximo possível.",
+    usage: `Envie uma imagem, ou mencione uma imagem, com a legenda *${prefix}figcover*\nVocê também pode usar *${prefix}figcover* e me enviar um URL de uma imagem, para que eu a transforme em um sticker`
+};

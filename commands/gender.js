@@ -21,3 +21,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Gender",
+    description: "Determine o gênero de um nome...",
+    usage: `*${prefix}gender* _Nome_`
+};

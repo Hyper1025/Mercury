@@ -20,3 +20,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Death",
+    description: "Digo para você com quantos anos geralmente pessoas morrem, baseado no seu nome",
+    usage: `*${prefix}death* _Nome_`
+};

@@ -24,3 +24,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "tapa",
+    description: "Envia um tapa",
+    usage: `*${prefix}tapa* _mencione_`
+};

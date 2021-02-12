@@ -39,3 +39,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "admonly",
+    description: "Ativa o modo só adm no grupo, para previnir baderna",
+    usage: `Para ligar\n*${prefix}admonly* _ON_\nPara desligar\n*${prefix}admonly* _OFF_`
+};

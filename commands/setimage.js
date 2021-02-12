@@ -63,3 +63,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "setImage",
+    description: "Define uma imagem para o grupo.",
+    usage: `\nVocê pode mencionar ou enviar uma imagem usando a mensagem *${prefix}setImage*\nVocê também pode me enviar um link de uma imagem *${prefix}setImage* _URL da imagem_`
+};

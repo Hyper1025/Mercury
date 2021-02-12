@@ -34,3 +34,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Neko",
+    description: "Envia uma imagem de uma neko",
+    usage: `*${prefix}neko*`
+};

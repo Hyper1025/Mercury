@@ -19,3 +19,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Pokemon",
+    description: "Envia um pokemon aleatório",
+    usage: `*${prefix}pokemon*`
+};

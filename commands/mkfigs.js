@@ -47,3 +47,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "MkFigs",
+    description: "Procure por uma imagem, e eu devolvo um sticker para você sobre o assunto pesquisado!",
+    usage: `*${prefix}MkFigs* _Texto_`
+};

@@ -43,3 +43,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "SIMG",
+    description: "SIMG é a sigla para Search Image, ou procura por image... Se trata de uma pesquisa reversa, você me envia uma imagem, e eu procuro por imagens semelhantes a ela",
+    usage: `Envie uma imagem *${prefix}sImg*`
+};

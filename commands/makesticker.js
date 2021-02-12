@@ -29,3 +29,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "MakeSticker",
+    description: "Procure por uma imagem, e eu devolvo um sticker para você sobre o assunto pesquisado!",
+    usage: `*${prefix}MakeSticker* _Texto_`
+};

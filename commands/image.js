@@ -31,3 +31,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Image",
+    description: "Envia uma imagem referente a sua pesquisa\nFonte: Pinterest",
+    usage: `*${prefix}Image* _Pesquisa_`
+};

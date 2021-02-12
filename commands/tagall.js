@@ -52,3 +52,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "TagAll",
+    description: "Chama todos do grupo, é importante adicionar um assunto na mensagem... Vai ajudar para quem ler a notificação 😁",
+    usage: `*${prefix}tagall* _Assunto_`
+};

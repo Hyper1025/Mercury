@@ -54,3 +54,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "giphy",
+    description: "Serve para fazer figurinhas do whatsapp!\nA partir de gifs do Giphy.",
+    usage: `*${prefix}giphy* _Link do giphy_`
+};

@@ -18,3 +18,8 @@ exports.run = (client, message) => {
     }
 };
 
+exports.help = {
+    name: "Ping",
+    description: "Veja meu tempo de resposta",
+    usage: "ping"
+};

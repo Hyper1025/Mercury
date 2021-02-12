@@ -40,3 +40,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Welcome",
+    description: "Ative ou desative as boas vindas no grupo",
+    usage: `Para ligar, use\n*${prefix}welcome* _ON_\nDesligar, use\n$*${prefix}welcome* _OFF_`
+};

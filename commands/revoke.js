@@ -30,3 +30,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "revoke",
+    description: "Redefine o link do grupo.",
+    usage: `*${prefix}revoke*`
+};

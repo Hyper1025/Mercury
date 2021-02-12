@@ -62,3 +62,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Fake",
+    description: "Ativa ou desativa o Anti-Fakes",
+    usage: `Para ligar, use\n*${prefix}fake* _ON_\nDesligar, use\n*${prefix}fake* _OFF_\nVocê precisa ativar as boas vindas para que isso funcione...`
+};

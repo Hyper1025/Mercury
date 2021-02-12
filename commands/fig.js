@@ -75,3 +75,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Fig",
+    description: "Serve para fazer figurinhas do WhatsApp!",
+    usage: `Envie uma imagem, ou mencione uma imagem, com a legenda *${prefix}fig*\nVocê também pode usar *${prefix}fig* e me enviar um URL de uma imagem, para que eu a transforme em um fig`
+};

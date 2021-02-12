@@ -41,3 +41,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "conversa",
+    description: "Dou uma de simsimi pra você... Então não me leve a sério.\nAntecipadamente já peço desculpas se eu enviar uma resposta muito errada\nSabe como é o simsimi 🤡",
+    usage: `*${prefix}conversa* _Seu texto_`
+};

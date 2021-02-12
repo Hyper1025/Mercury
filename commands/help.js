@@ -37,3 +37,8 @@ exports.run = (client, message, args) => {
     });
 };
 
+exports.help = {
+    name: "Help",
+    description: "Mostra lista de comandos do bot",
+    usage: "help"
+};

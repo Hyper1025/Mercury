@@ -63,3 +63,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Gif",
+    description: "Serve para fazer figurinhas animadas, usando vídeos MP4 ou GIF's!",
+    usage: `Envie um vídeo ou GIF, ou mencione, com a legenda *${prefix}gif*`
+};

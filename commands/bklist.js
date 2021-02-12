@@ -44,3 +44,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "bklist",
+    description: "Adicione alguém na lista negra.",
+    usage: `*${prefix}blacklist* _Número_`
+};

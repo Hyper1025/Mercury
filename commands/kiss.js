@@ -31,3 +31,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Kiss",
+    description: "Dá um beijinho em alguém!\nVocê só pode dar beijinhos quando estiver em um grupo...",
+    usage: `*${prefix}kiss* _mencione alguém_`
+};

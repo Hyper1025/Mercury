@@ -24,3 +24,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Yaoi",
+    description: "Envia uma imagem de Yaoi",
+    usage: `*${prefix}Yaoi*`
+};

@@ -35,3 +35,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Add",
+    description: "Adiciona alguém no grupo através do número da pessoa.",
+    usage: `*${prefix}add* _Número completo_\n\nNão adicione nenhum tipo de símbolo, apenas o número completo com DDD do pais e DDD local`
+};

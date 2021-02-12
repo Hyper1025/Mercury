@@ -30,3 +30,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "ClearAll",
+    description: "Limpa todos chats do bot.",
+    usage: `*${prefix}ClearAll*`
+};

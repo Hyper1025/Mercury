@@ -30,3 +30,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Cat",
+    description: "Manda um gatinho fofo para você",
+    usage: `*${prefix}cat*`
+};

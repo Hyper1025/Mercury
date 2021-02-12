@@ -22,3 +22,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "GetMeme",
+    description: "Responde com um meme aleatório",
+    usage: `*${prefix}getMeme*`
+};

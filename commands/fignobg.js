@@ -61,3 +61,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "FigNoBg",
+    description: "Serve para fazer figurinhas do com remoção de fundo inteligente.\nUse só se necessário, pois seu uso é limitado por dia...",
+    usage: `Envie uma imagem, ou mencione uma imagem, com a legenda *${prefix}FigNoBg*`
+};

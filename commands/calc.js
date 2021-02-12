@@ -15,3 +15,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Calc",
+    description: "Calcule algo",
+    usage: "Calc _expressão_"
+};

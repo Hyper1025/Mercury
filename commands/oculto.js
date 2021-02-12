@@ -27,3 +27,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Oculto",
+    description: "Esse eu prefiro nem descrever...",
+    usage: `*${prefix}oculto* _mencione Alguém_`
+};

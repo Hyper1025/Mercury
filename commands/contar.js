@@ -21,3 +21,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Contar",
+    description: "Conta quantas letras tem a mensagem...",
+    usage: `*${prefix}contar* _texto_`
+};

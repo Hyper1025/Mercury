@@ -277,3 +277,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "TextToSpeech",
+    description: "Serve para fazer figurinhas do WhatsApp!",
+    usage: `*${prefix}tts* _Texto_`
+};

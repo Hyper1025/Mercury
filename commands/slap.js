@@ -26,3 +26,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Slap",
+    description: "Dá um tapa em alguém!\nVocê só pode dar tapas quando estiver em um grupo...",
+    usage: `*${prefix}slap* _mencione alguém_`
+};

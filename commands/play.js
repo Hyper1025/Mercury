@@ -93,3 +93,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Play",
+    description: "Envia o áudio de uma música do YouTube baseado na sua pesquisa, ou link do vídeo",
+    usage: `*${prefix}play* _Sua pesquisa_\n*${prefix}play* _Link do YouTube_`
+};

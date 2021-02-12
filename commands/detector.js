@@ -28,3 +28,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Detector",
+    description: "Vish, parece que estou detectando algo... 😏",
+    usage: `*${prefix}Detector*`
+};

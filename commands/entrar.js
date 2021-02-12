@@ -47,3 +47,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "entrar",
+    description: "Adiciona o bot em um grupo",
+    usage: `*${prefix}entrar* _Link do grupo_`
+};

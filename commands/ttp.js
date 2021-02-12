@@ -25,3 +25,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Ttp",
+    description: "Transforma texto em figurinha",
+    usage: `*${prefix}ttp* _Texto_`
+};

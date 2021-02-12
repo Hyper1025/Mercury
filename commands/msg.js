@@ -20,3 +20,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Msg",
+    description: "Repito o que você me mandar...",
+    usage: `*${prefix}msg* _texto_`
+};

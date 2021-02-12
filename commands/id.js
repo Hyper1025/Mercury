@@ -19,3 +19,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "id",
+    description: "Responde com o ID do grupo",
+    usage: `*${prefix}id*`
+};

@@ -21,3 +21,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Chance",
+    description: "Digo a change de algo se realizar",
+    usage: `*${prefix}chance* _algo que você quer que aconteça_`
+};

@@ -33,3 +33,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Leave",
+    description: "Me despeço do grupo ✋😔, se você não me quiser mais por aqui...",
+    usage: `*${prefix}leave* `
+};

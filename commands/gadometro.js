@@ -33,3 +33,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Gadometro",
+    description: "Descubra gadinho você é... 🐂",
+    usage: `*${prefix}Gadometro*\n*${prefix}Gadometro* _mencione alguém_`
+};

@@ -70,3 +70,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Demote",
+    description: "Remove o ADM de alguém",
+    usage: `*${prefix}demote* _Mencione alguém_`
+};

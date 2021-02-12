@@ -40,3 +40,8 @@ exports.run = async (client, message, args) => {
     }
 };
 
+exports.help = {
+    name: "Del",
+    description: "Remove o ADM de alguém",
+    usage: `Marque uma mensagem do bot e responda ela com *${prefix}Del*`
+};
